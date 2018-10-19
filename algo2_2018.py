@@ -23,6 +23,9 @@ class Tree(object):
             res += str(child)
         return res+")"
 
+    def getNodeName(self):
+        return self.name + " : " + str(self.weight)
+
     def contribution(self):
         res = self.weight
         i = 0
@@ -35,47 +38,30 @@ class Tree(object):
                 i+=1
         return res
 
-    def show(self,figure=1):
-        G1=nx.DiGraph()
-        self.makeGraph(G1)
-        pos = hierarchy_pos(G1,self.name+" : "+str(self.weight))
+    def show(self,figure):
+        G1 = nx.DiGraph()
+        pos = self.makeGraph(G1)
         plt.figure(figure)
-        nx.draw_networkx_nodes(G1,pos,node_size=1000)
-        nx.draw_networkx_edges(G1,pos,width=3,arrowstyle="<|-|>",arrowsize=20)
-        nx.draw_networkx_labels(G1,pos,font_size=10,font_family='sans-serif')
+        nx.draw_networkx_nodes(G1,pos,node_size=1000,node_color='red',alpha=0.5)
+        nx.draw_networkx_edges(G1,pos,width=2,arrowstyle="-|>",arrowsize=15,edge_color='blue',alpha=0.25)
+        nx.draw_networkx_labels(G1,pos,font_size=10,font_family='sans-serif',font_color='black')
         plt.axis('off')
 
-    def makeGraph(self,G):
-        for child in self.children:
-            #G.add_edge(self.name,child.name,weight=child.weight)
-            G.add_edge(self.name + " : " + str(self.weight),child.name + " : " + str(child.weight))
-            child.makeGraph(G)
+    def makeGraph(self, G, pos = {}, x = 0.5, y = 0, space = 0.2, width = 1):
 
-def hierarchy_pos(G, root, width=1, vert_gap = 0.2, vert_loc = 0, xcenter = 0.5,
-                  pos = None, parent = None):
-    '''If there is a cycle that is reachable from root, then this will see infinite recursion.
-       G: the graph
-       root: the root node of current branch
-       width: horizontal space allocated for this branch - avoids overlap with other branches
-       vert_gap: gap between levels of hierarchy
-       vert_loc: vertical location of root
-       xcenter: horizontal location of root
-       pos: a dict saying where all nodes go if they have been assigned
-       parent: parent of this branch.'''
-    if pos == None:
-        pos = {root:(xcenter,vert_loc)}
-    else:
-        pos[root] = (xcenter, vert_loc)
-    neighbors = list(G.neighbors(root))
-    if len(neighbors)!=0:
-        dx = width/len(neighbors)
-        nextx = xcenter - width/2 - dx/2
-        for neighbor in neighbors:
-            nextx += dx
-            pos = hierarchy_pos(G,neighbor, width = dx+0.075, vert_gap = vert_gap,
-                                vert_loc = vert_loc-vert_gap, xcenter=nextx, pos=pos,
-                                parent = root)
-    return pos
+        pos[self.getNodeName()] = (x,y)
+
+        if len(self.children) != 0:
+
+            dx = width/len(self.children)
+            nx = x - width/2 - dx/2
+
+            for child in self.children:
+                G.add_edge(self.getNodeName(),child.getNodeName())
+                nx += dx
+                pos = child.makeGraph(G,pos,nx,y-space,space,dx+0.075)
+
+        return pos
 
 def max_subtree(t):
     c = copy.deepcopy(t)
@@ -111,7 +97,6 @@ def main():
     r = [2,a,b]
 
     t = Tree(r)
-    #print(t)
     max_subtree(t)
     test_hypertree(t)
 
