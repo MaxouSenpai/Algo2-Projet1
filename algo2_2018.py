@@ -96,6 +96,7 @@ def max_subtree(t):
     #nx.draw(G1)
     """
     t.show()
+    
     """
     G=nx.DiGraph()
     c.makeGraph(G)
