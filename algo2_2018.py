@@ -1,6 +1,7 @@
 import copy
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 
 class Tree(object):
     """docstring for Tree."""
@@ -24,7 +25,7 @@ class Tree(object):
         return res+")"
 
     def getNodeName(self):
-        return self.name + " : " + str(self.weight)
+        return self.name + "\n" + str(self.weight)
 
     def contribution(self):
         res = self.weight
@@ -38,16 +39,25 @@ class Tree(object):
                 i+=1
         return res
 
-    def show(self,figure):
-        G1 = nx.DiGraph()
-        pos = self.makeGraph(G1)
-        plt.figure(figure)
-        nx.draw_networkx_nodes(G1,pos,node_size=1000,node_color='red',alpha=0.5)
-        nx.draw_networkx_edges(G1,pos,width=2,arrowstyle="-|>",arrowsize=15,edge_color='blue',alpha=0.25)
-        nx.draw_networkx_labels(G1,pos,font_size=10,font_family='sans-serif',font_color='black')
+    def show(self,background):
+        G = nx.DiGraph()
+        background.makeGraph(G)
+        pos = background.makePos()
+        plt.figure("max_subtree",figsize=(20,10))
+        nx.draw_networkx_nodes(G,pos,node_size=650,node_color="silver",alpha=0.5)
+        nx.draw_networkx_edges(G,pos,width=2,arrowstyle="-|>",arrowsize=15,edge_color='blue',alpha=0.25)
+        nx.draw_networkx_labels(G,pos,font_size=10,font_family='sans-serif',font_color='black')
+        G = nx.DiGraph()
+        self.makeGraph(G)
+        nx.draw_networkx_nodes(G,pos,node_size=650,node_color="red",alpha=0.5)
         plt.axis('off')
 
-    def makeGraph(self, G, pos = {}, x = 0.5, y = 0, space = 0.2, width = 1):
+    def makeGraph(self, G):
+        for child in self.children:
+            G.add_edge(self.getNodeName(),child.getNodeName())
+            child.makeGraph(G)
+
+    def makePos(self,pos = {}, x = 0.5, y = 0, space = 0.2, width = 1):
 
         pos[self.getNodeName()] = (x,y)
 
@@ -57,24 +67,41 @@ class Tree(object):
             nx = x - width/2 - dx/2
 
             for child in self.children:
-                G.add_edge(self.getNodeName(),child.getNodeName())
                 nx += dx
-                pos = child.makeGraph(G,pos,nx,y-space,space,dx+0.075)
+                pos = child.makePos(pos,nx,y-space,space,dx+0.075)
 
         return pos
 
+
 def max_subtree(t):
     c = copy.deepcopy(t)
-    print(str(c.contribution()) + " ---> " + str(c))
-
-    t.show("Before")
-
-    c.show("After")
-
-    plt.show()
+    #print(str(c.contribution()) + " ---> " + str(c))
+    if c.contribution() > 0:
+        c.show(t)
+        plt.show()
 
 def test_hypertree(t):
     pass
+
+def yolo(random_array,temp=[]):
+    nb_of_children = np.random.randint(0,len(random_array)//2)
+
+    for i in range(nb_of_children):
+        temp.append([random_array.pop(0)])
+
+    for i in range(nb_of_children):
+        yolo(random_array,temp[i+1])
+
+    return temp
+
+
+def randomTree():
+    res = []
+    random_array = list(np.random.randint(-100,100,15))
+    res.append(random_array.pop(0))
+    res = yolo(random_array,res)
+    return res
+
 
 def main():
 
@@ -96,7 +123,9 @@ def main():
 
     r = [2,a,b]
 
-    t = Tree(r)
+    #t = Tree(r)
+    t = Tree(randomTree())
+    #t = Tree([-10,[2],[3]])
     max_subtree(t)
     test_hypertree(t)
 
