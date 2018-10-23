@@ -3,9 +3,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 class Graph :
     def __init__(self,V={},E={},incidenceMatrix=[]) :
-        self.sommets = 7
+        self.Vertex = 7
         self.V = V
-        self.n = len(self.V)
         self.E = E
         self.Vertices = self.getVertices()
         self.Edges = self.getEdges()
@@ -13,30 +12,30 @@ class Graph :
         self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.incidence_Matrix()
 
     def getVertices(self) :
-        return [sommet for sommet in self.V]
+        return [Vertex for Vertex in self.V]
 
     def getEdges(self) :
-        liste = []
-        for sommet in self.V :
-            for sommet2 in self.V[sommet] :
-                if {sommet,sommet2} not in liste :
-                    liste.append({sommet,sommet2})
-        return liste
+        lst = []
+        for Vertex in self.V :
+            for Vertex2 in self.V[Vertex] :
+                if {Vertex,Vertex2} not in lst :
+                    lst.append({Vertex,Vertex2})
+        return lst
 
     def PrimalGraphMatrix(self) :
-        matrix = [[ 0 for _ in range(self.sommets)] for _ in range(self.sommets)]
-        for sommet in self.V :
-            for sommet2 in self.V[sommet] :
-                matrix[int(sommet[-1])-1][int(sommet2[-1])-1] = 1
-        return np.array(matrix)
+        Matrix = [[ 0 for _ in range(self.Vertex)] for _ in range(self.Vertex)]
+        for Vertex in self.V :
+            for Vertex2 in self.V[Vertex] :
+                Matrix[int(Vertex[-1])-1][int(Vertex2[-1])-1] = 1
+        return np.array(Matrix)
 
     def incidence_Matrix(self) :
-        matrix = [[0 for _ in range(len(self.E))] for _ in range(self.n) ]
+        Matrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
         for hyperarete in self.E :
-            for sommet in self.E[hyperarete] :
-                matrix[int(sommet[-1])-1][int(hyperarete[-1])-1] = 1
+            for Vertex in self.E[hyperarete] :
+                Matrix[int(Vertex[-1])-1][int(hyperarete[-1])-1] = 1
 
-        return np.array(matrix)
+        return np.array(Matrix)
 
 
     def incidenceMatrixTranspose(self) :
@@ -47,15 +46,26 @@ class Graph :
         V = {}
         E = {}
         for i in range(len(incidenceMatrix)) :
-            name = "E" + str(i+1)
-            V[name] = []
-            E[name] = []
+            Vertex = "E" + str(i+1)
+            V[Vertex] = []
             for j in range(len(incidenceMatrix[0])) :
+                hyperarete = "Ev" + str(j+1)
+                if hyperarete not in E :
+                    E[hyperarete] = []
                 if incidenceMatrix[i][j] == 1 :
-                    name2 = "Ev" + str(j+1)
-                    E[name].append(name2)
+                    E[hyperarete].append(Vertex)
 
-        return Graph(E,V,incidenceMatrix)
+        for hyperarete in E :
+            x = len(E[hyperarete])
+            if x > 1 :
+                for i in range(x) :
+                    for j in range(i+1,x) :
+                        if E[hyperarete][j] not in V[E[hyperarete][i]] :
+                            V[E[hyperarete][i]].append(E[hyperarete][j])
+                        if E[hyperarete][i] not in V[E[hyperarete][j]] :
+                            V[E[hyperarete][j]].append(E[hyperarete][i])
+
+        return Graph(V,E,incidenceMatrix)
 
     def __str__(self) :
         for elem in self.V :
@@ -65,12 +75,12 @@ class Graph :
 
 
 
-V = { "v1" : [("v2"),("v3")],
-      "v2" : [("v1"),("v3")],
-      "v3" : [("v1"), ("v2"),("v5"),("v6")],
+V = { "v1" : ["v2","v3"],
+      "v2" : ["v1","v3"],
+      "v3" : ["v1", "v2","v5","v6"],
       "v4" : [],
-      "v5" : [("v3"),("v6")],
-      "v6" : [("v3"),("v5")],
+      "v5" : ["v3","v6"],
+      "v6" : ["v3","v5"],
       "v7" : []
     }
 
@@ -86,7 +96,7 @@ print(graphe.Vertices)
 print("Edges of graph:")
 print(graphe.Edges)
 print("Adjacency Matrix")
-print(graphe.PrimalGraphMatrix())
+print(graphe.PrimalGraph)
 print("Incidence Matrix ")
 print(graphe.incidenceMatrix)
 print("Incidence Matrix Transpose")
@@ -98,12 +108,13 @@ print(grapheDual.Vertices)
 print("Edges of dual graph:")
 print(grapheDual.Edges)
 print("Adjacency Matrix")
-print(grapheDual.PrimalGraphMatrix())
+print(grapheDual.PrimalGraph)
 print("Incidence Matrix ")
 print(grapheDual.incidenceMatrix)
 print("Incidence Matrix Transpose")
 print(grapheDual.incidenceMatrixTranspose())
 print(grapheDual)
+
 
 
 
