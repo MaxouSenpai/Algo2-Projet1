@@ -1,81 +1,126 @@
-import numpy as np
+from random import random,randint
 import networkx as nx
 import matplotlib.pyplot as plt
+
 class Graph :
-    def __init__(self,V={},E={},incidenceMatrix=[]) :
-        self.Vertex = 7
+    def __init__(self,V={},E={},incidenceMatrix = []) :
         self.V = V
         self.E = E
+        self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.IncidenceGraphMatrix()
+        self.dicoV = self.MakeGraph()
         self.Vertices = self.getVertices()
         self.Edges = self.getEdges()
         self.PrimalGraph = self.PrimalGraphMatrix()
-        self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.incidence_Matrix()
+        self.incidenceMatrixTranspose = self.incidenceMatrix_Transpose()
 
     def getVertices(self) :
-        return [Vertex for Vertex in self.V]
+        return self.V
 
     def getEdges(self) :
         lst = []
-        for Vertex in self.V :
-            for Vertex2 in self.V[Vertex] :
+        for Vertex in self.dicoV :
+            for Vertex2 in self.dicoV[Vertex] :
                 if {Vertex,Vertex2} not in lst :
                     lst.append({Vertex,Vertex2})
         return lst
 
-    def PrimalGraphMatrix(self) :
-        Matrix = [[ 0 for _ in range(self.Vertex)] for _ in range(self.Vertex)]
-        for Vertex in self.V :
-            for Vertex2 in self.V[Vertex] :
-                Matrix[int(Vertex[-1])-1][int(Vertex2[-1])-1] = 1
-        return np.array(Matrix)
+    def MakeGraph(self) :
+        dicoV = {}
+        for elem in self.V :
+            dicoV[elem] = []
 
-    def incidence_Matrix(self) :
-        Matrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
         for hyperarete in self.E :
-            for Vertex in self.E[hyperarete] :
-                Matrix[int(Vertex[-1])-1][int(hyperarete[-1])-1] = 1
-
-        return np.array(Matrix)
-
-
-    def incidenceMatrixTranspose(self) :
-        return np.transpose(self.incidenceMatrix)
-
-    @staticmethod
-    def generateDualGraph(incidenceMatrix) :
-        V = {}
-        E = {}
-        for i in range(len(incidenceMatrix)) :
-            Vertex = "E" + str(i+1)
-            V[Vertex] = []
-            for j in range(len(incidenceMatrix[0])) :
-                hyperarete = "Ev" + str(j+1)
-                if hyperarete not in E :
-                    E[hyperarete] = []
-                if incidenceMatrix[i][j] == 1 :
-                    E[hyperarete].append(Vertex)
-
-        for hyperarete in E :
-            x = len(E[hyperarete])
+            x = len(self.E[hyperarete])
             if x > 1 :
                 for i in range(x) :
                     for j in range(i+1,x) :
-                        if E[hyperarete][j] not in V[E[hyperarete][i]] :
-                            V[E[hyperarete][i]].append(E[hyperarete][j])
-                        if E[hyperarete][i] not in V[E[hyperarete][j]] :
-                            V[E[hyperarete][j]].append(E[hyperarete][i])
+                        if self.E[hyperarete][i] not in dicoV[self.E[hyperarete][j]] :
+                            dicoV[self.E[hyperarete][j]].append(self.E[hyperarete][i])
+                        if self.E[hyperarete][j] not in dicoV[self.E[hyperarete][i]] :
+                            dicoV[self.E[hyperarete][i]].append(self.E[hyperarete][j])
+        return dicoV
 
-        return Graph(V,E,incidenceMatrix)
+    def PrimalGraphMatrix(self) :
+        n = len(self.V)
+        Matrix = [[ 0 for _ in range(n)] for _ in range(n)]
+        for Vertex in self.dicoV :
+            for Vertex2 in self.dicoV[Vertex] :
+                Matrix[self.stringDigit(Vertex)-1][self.stringDigit(Vertex2)-1] = 1
 
-    def __str__(self) :
-        for elem in self.V :
-            print(elem + " :" , self.V[elem])
-        return ""
+        return Matrix
 
+    def IncidenceGraphMatrix(self) :
+        IncidenceMatrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
+        for hyperarete in self.E :
+            for Vertex in self.E[hyperarete] :
+                IncidenceMatrix[self.stringDigit(Vertex)-1][self.stringDigit(hyperarete)-1] = 1
 
+        return IncidenceMatrix
 
+    def incidenceMatrix_Transpose(self) :
+        n = len(self.incidenceMatrix)
+        m = len(self.incidenceMatrix[0])
+        MatrixTranspose = [[0 for i in range(n)] for j in range(m)]
+        for i in range(n) :
+            for j in range(m) :
+                MatrixTranspose[j][i] = self.incidenceMatrix[i][j]
 
-V = { "v1" : ["v2","v3"],
+        return MatrixTranspose
+
+    def generateDualGraph(self) :
+        V = set()
+        E = {}
+        for i in range(len(self.incidenceMatrixTranspose)) :
+            Vertex = "E" + str(i+1)
+            V.add(Vertex)
+            for j in range(len(self.incidenceMatrixTranspose[0])) :
+                hyperarete = "Ev" + str(j+1)
+                if hyperarete not in E :
+                    E[hyperarete] = []
+                if self.incidenceMatrixTranspose[i][j] == 1 :
+                    E[hyperarete].append(Vertex)
+
+        return Graph(V,E)
+
+    def stringDigit(self,str) :
+        res = ""
+        for letter in str :
+            if letter.isdigit() :
+                res += letter
+        return int(res)
+
+def printMatrix(Matrix) :
+    n = len(Matrix)
+    m = len(Matrix[0])
+    print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
+
+def random_graph_generator(n,m):
+    V = set(["v" + str(i) for i in range(1,n+1)])
+    E = {}
+    for i in range(1,m+1) :
+        E["E" + str(i)] = []
+
+    incidenceMatrix = [[0 for _ in range(m)] for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            if random() < 0.5:
+
+                Vertex = "v" + str(i+1)
+                hyperarete = "E" + str(j+1)
+                E[hyperarete].append(Vertex)
+
+                incidenceMatrix[i][j] = 1
+    ### PRINT Matrix
+    printMatrix(incidenceMatrix)
+    ### PRINT E
+    for elem in E :
+        print(elem + " :" , E[elem])
+
+    return Graph(V,E,incidenceMatrix)
+"""
+V = {"v1","v2","v3","v4","v5","v6","v7"}
+
+v = { "v1" : ["v2","v3"],
       "v2" : ["v1","v3"],
       "v3" : ["v1", "v2","v5","v6"],
       "v4" : [],
@@ -89,33 +134,32 @@ E = { "E1" : ["v1","v2","v3"] ,
       "E3" : ["v3","v5","v6"] ,
       "E4" : ["v4"]
     }
-
-graphe = Graph(V,E)
+"""
+graphe = random_graph_generator(randint(1,15),randint(1,15))
 print("Vertices of graph:")
 print(graphe.Vertices)
 print("Edges of graph:")
 print(graphe.Edges)
 print("Adjacency Matrix")
-print(graphe.PrimalGraph)
+printMatrix(graphe.PrimalGraph)
+
 print("Incidence Matrix ")
-print(graphe.incidenceMatrix)
+printMatrix(graphe.incidenceMatrix)
 print("Incidence Matrix Transpose")
-print(graphe.incidenceMatrixTranspose())
+printMatrix(graphe.incidenceMatrixTranspose)
 print("\n\n\n\n")
-grapheDual = Graph.generateDualGraph(graphe.incidenceMatrixTranspose())
+
+grapheDual = graphe.generateDualGraph()
 print("Vertices of dual graph:")
 print(grapheDual.Vertices)
 print("Edges of dual graph:")
 print(grapheDual.Edges)
 print("Adjacency Matrix")
-print(grapheDual.PrimalGraph)
+printMatrix(grapheDual.PrimalGraph)
 print("Incidence Matrix ")
-print(grapheDual.incidenceMatrix)
+printMatrix(grapheDual.incidenceMatrix)
 print("Incidence Matrix Transpose")
-print(grapheDual.incidenceMatrixTranspose())
-print(grapheDual)
-
-
+printMatrix(grapheDual.incidenceMatrixTranspose)
 
 
 #G = nx.Graph(g)
