@@ -108,6 +108,20 @@ class Hypergraph :
                 X.union({vertex})
         return cliques
 
+    def checkCliques(self) :
+        cliques = self.find_cliques(self.V)
+        print(cliques)
+        check = True
+        E_values = list(self.E.values())
+
+        for clique in cliques :
+            check = sorted(list(clique)) in E_values
+            if not check :
+                break
+
+        return check
+
+
     def stringDigit(self,str) :
         res = ""
         for letter in str :
@@ -187,3 +201,5 @@ E = { "E1" : ["v1","v2","v3"] ,
       "E3" : ["v3","v5","v6"] ,
       "E4" : ["v4"]
     }
+test = Hypergraph(V,E)
+print(test.checkCliques())
