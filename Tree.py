@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-class Tree():
+class Tree:
     """docstring for Tree."""
 
     def __init__(self,data,x=0.5,y=1,space=0.25,width=3):

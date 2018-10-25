@@ -10,12 +10,11 @@ def max_subtree(t):
     plt.axis('off')
 
     if t.maxContribution() > 0:
-
         t.show(ax)
 
     else:
         plt.text(0.5,0.5,"Il n’existe pas de sous-arbre de poids positif contenant r",horizontalalignment="center",verticalalignment="center",fontsize=20)
-        print(t)
+
     plt.show()
 
 def randomTree(max_nodes=15):
