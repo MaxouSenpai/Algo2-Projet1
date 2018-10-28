@@ -3,46 +3,40 @@ import matplotlib.pyplot as plt
 class Tree:
     """docstring for Tree."""
 
-    def __init__(self,data,x=0.5,y=1,space=0.25,width=3):
+    def __init__(self,data):
 
         self.name = data[0]
 
         self.weight = data[1]
 
-        self.x = x
-        self.y = y
-
-        self.state = True
-
         self.children = []
 
-        if len(data[2]) > 0: # Prevent division by 0
+        for child in data[2]:
+            self.children.append(Tree(child))
 
-            dx = width/len(data[2])
-            nx = x - width/2 - dx/2
 
-            for child in data[2]:
-                nx += dx
-                temp = Tree(child,nx,y-space,space,dx+0.075)
-                self.children.append(temp)
-
-    def maxContribution(self):
+    def maxContribution(self,state=[]):
         res = self.weight
 
         for child in self.children:
             temp = child.maxContribution()
             if temp <= 0:
-                child.state = False
+                state.append(child)
             else:
                 res += temp
         return res
 
-    def show(self,ax,state=True):
+    def show(self,ax,state=[],current_state=True,x=0.5,y=1,space=0.25,width=3):
 
-        state = state and self.state
-        ax.add_artist(plt.Circle((self.x, self.y), 0.075, color="red" if state else "silver"))
-        plt.text(self.x,self.y,str(self.name)+'\n'+str(self.weight),horizontalalignment="center",verticalalignment="center",fontsize=20)
+        current_state = current_state and self not in state
+        ax.add_artist(plt.Circle((x, y), 0.075, color="red" if current_state else "silver"))
+        plt.text(x,y,str(self.name)+'\n'+str(self.weight),horizontalalignment="center",verticalalignment="center",fontsize=20)
 
-        for child in self.children:
-            ax.arrow(self.x, self.y-0.075, child.x-self.x, 0.15+child.y-self.y,head_width=0.05, head_length=0.05,fc="k", ec="k",length_includes_head=True)
-            child.show(ax,state)
+        if len(self.children) > 0: # Prevent division by 0
+            dx = width/len(self.children)
+            nx = x - width/2 - dx/2
+
+            for child in self.children:
+                nx += dx
+                ax.arrow(x, y-0.075, nx-x, 0.15+y-space-y,head_width=0.05, head_length=0.05,fc="k", ec="k",length_includes_head=True)
+                child.show(ax,state,current_state,nx,y-space,space,dx+0.075)
