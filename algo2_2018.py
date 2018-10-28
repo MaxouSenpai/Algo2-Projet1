@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import Tree
+#import HyperGraph
+import FirstTry
 
 def max_subtree(t):
     plt.figure("max_subtree",figsize=(20,10))
@@ -21,7 +23,7 @@ def randomTree(max_nodes=15):
     res = ['r',np.random.randint(-100,100),[]]
     random_array = list(np.random.randint(-100,100,max_nodes-1))
     makeRandomTree(random_array,res,65)
-    return res
+    return Tree.Tree(res)
 
 def makeRandomTree(random_array,temp,letter):
     nb_of_children = np.random.randint(0,len(random_array)//2)
@@ -37,7 +39,8 @@ def makeRandomTree(random_array,temp,letter):
 
 def main():
 
-    t = Tree.Tree(randomTree())
-    max_subtree(t)
+    max_subtree(randomTree())
+
+    g = FirstTry.HyperGraph()
 
 main()
