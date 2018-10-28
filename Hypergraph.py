@@ -114,7 +114,7 @@ class Hypergraph :
         print("Les cliques maximales du graphe :",cliques)
         check = True
         E_values = [set(liste) for liste in self.E.values()]
-        
+
         for clique in cliques :
             check = clique in E_values
             if not check :
@@ -206,11 +206,11 @@ def random_graph_generator(n,m):
 
 def test_hypertree(hypergraph) :
     hypergraphDual = hypergraph.generateDualGraph()
+    hypergraphDual.show()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
     return hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
 
 graphe = random_graph_generator(randint(1,15),randint(1,15))
-graphe.show()
 print("Vertices of graph:")
 print(graphe.Vertices)
 print("Edges of graph:")
