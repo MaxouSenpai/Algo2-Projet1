@@ -1,6 +1,6 @@
 from random import random,randint,choice
-import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 
 class Hypergraph :
     def __init__(self,V={},E={},incidenceMatrix = []) :
@@ -129,6 +129,50 @@ class Hypergraph :
                 res += letter
         return int(res)
 
+    def show(self):
+        ax = plt.axes()
+        ax.set_aspect("equal")
+        plt.axis([-0.1,1.1,-0.1,1.1])
+        plt.axis("off")
+        #plt.draw()
+
+        if len(self.V) > 0: # Prevent division by zero
+            o = 360/len(self.V)
+            angle = 90
+            pos = dict()
+
+            for v in self.V:
+                x = 0.5 + np.cos(np.deg2rad(angle))*0.5
+                y = 0.5 + np.sin(np.deg2rad(angle))*0.5
+                pos[v] = (x,y)
+                ax.add_artist(plt.Circle((x, y), 0.075, color="red"))
+                plt.text(x,y,v,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+                angle-=o
+
+            color = ['b','g','y','k','r','c','m']
+
+            for c in range(len(self.E.keys())):
+
+                e = list(self.E.keys())[c]
+
+                if len(self.E[e]) > 1:
+
+                    for i in range(len(self.E[e])):
+
+                        origin = pos[self.E[e][i]]
+
+                        for j in range(i+1,len(self.E[e])):
+                            temp = pos[self.E[e][j]]
+                            line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 10,alpha = 0.5)
+                            ax.add_line(line)
+                            plt.pause(1)
+                            line.set_linewidth(5)
+
+                elif len(self.E[e]) == 1: # Circle
+                    pass
+                plt.pause(2)
+            plt.show()
+
 def printMatrix(Matrix) :
     n = len(Matrix)
     m = len(Matrix[0])
@@ -202,4 +246,13 @@ E = { "E1" : ["v1","v2","v3"] ,
       "E4" : ["v4"]
     }
 test = Hypergraph(V,E)
+plt.figure("Test :-D",figsize=(20,10))
+#ax = plt.axes()
+#ax.set_aspect("equal")
+#plt.axis([-0.1,1.1,-0.1,1.1])
+#plt.axis("off")
+test.show()
+#ax.add_line(plt.Line2D([0,1], [0,1],color="green"))
+#plt.plot(0, 1, '-g')  # solid green
+#plt.show()
 print(test.checkCliques())
