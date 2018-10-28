@@ -1,4 +1,5 @@
 from random import random,randint,choice
+from Graph import Graph
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -29,15 +30,15 @@ class Hypergraph :
         for elem in self.V :
             dicoV[elem] = []
 
-        for hyperarete in self.E :
-            x = len(self.E[hyperarete])
+        for hyperedge in self.E :
+            x = len(self.E[hyperedge])
             if x > 1 :
                 for i in range(x) :
                     for j in range(i+1,x) :
-                        if self.E[hyperarete][i] not in dicoV[self.E[hyperarete][j]] :
-                            dicoV[self.E[hyperarete][j]].append(self.E[hyperarete][i])
-                        if self.E[hyperarete][j] not in dicoV[self.E[hyperarete][i]] :
-                            dicoV[self.E[hyperarete][i]].append(self.E[hyperarete][j])
+                        if self.E[hyperedge][i] not in dicoV[self.E[hyperedge][j]] :
+                            dicoV[self.E[hyperedge][j]].append(self.E[hyperedge][i])
+                        if self.E[hyperedge][j] not in dicoV[self.E[hyperedge][i]] :
+                            dicoV[self.E[hyperedge][i]].append(self.E[hyperedge][j])
         return dicoV
 
     def PrimalGraphMatrix(self) :
@@ -51,9 +52,9 @@ class Hypergraph :
 
     def IncidenceGraphMatrix(self) :
         IncidenceMatrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
-        for hyperarete in self.E :
-            for Vertex in self.E[hyperarete] :
-                IncidenceMatrix[self.stringDigit(Vertex)-1][self.stringDigit(hyperarete)-1] = 1
+        for hyperedge in self.E :
+            for Vertex in self.E[hyperedge] :
+                IncidenceMatrix[self.stringDigit(Vertex)-1][self.stringDigit(hyperedge)-1] = 1
 
         return IncidenceMatrix
 
@@ -79,11 +80,11 @@ class Hypergraph :
             Vertex = "E" + str(i+1)
             V.add(Vertex)
             for j in range(len(self.incidenceMatrixTranspose[0])) :
-                hyperarete = "Ev" + str(j+1)
-                if hyperarete not in E :
-                    E[hyperarete] = []
+                hyperedge = "Ev" + str(j+1)
+                if hyperedge not in E :
+                    E[hyperedge] = []
                 if self.incidenceMatrixTranspose[i][j] == 1 :
-                    E[hyperarete].append(Vertex)
+                    E[hyperedge].append(Vertex)
 
         return Hypergraph(V,E)
 
@@ -110,7 +111,7 @@ class Hypergraph :
 
     def checkCliques(self) :
         cliques = self.find_cliques(self.V)
-        print(cliques)
+        print("Les cliques maximales du graphe :",cliques)
         check = True
         E_values = list(self.E.values())
 
@@ -190,19 +191,26 @@ def random_graph_generator(n,m):
             if random() < 0.5:
 
                 Vertex = "v" + str(i+1)
-                hyperarete = "E" + str(j+1)
-                E[hyperarete].append(Vertex)
+                hyperedge = "E" + str(j+1)
+                E[hyperedge].append(Vertex)
 
                 incidenceMatrix[i][j] = 1
+    """
     ### PRINT Matrix
     printMatrix(incidenceMatrix)
     ### PRINT E
     for elem in E :
         print(elem + " :" , E[elem])
-
+    """
     return Hypergraph(V,E,incidenceMatrix)
 
+def test_hypertree(hypergraph) :
+    hypergraphDual = hypergraph.generateDualGraph()
+    hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
+    return hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
+
 graphe = random_graph_generator(randint(1,15),randint(1,15))
+graphe.show()
 print("Vertices of graph:")
 print(graphe.Vertices)
 print("Edges of graph:")
@@ -228,31 +236,5 @@ printMatrix(grapheDual.incidenceMatrix)
 print("Incidence Matrix Transpose")
 printMatrix(grapheDual.incidenceMatrixTranspose)
 
-
-V = {"v1","v2","v3","v4","v5","v6","v7"}
-
-dicoV = { "v1" : ["v2","v3"],
-      "v2" : ["v1","v3"],
-      "v3" : ["v1", "v2","v5","v6"],
-      "v4" : [],
-      "v5" : ["v3","v6"],
-      "v6" : ["v3","v5"],
-      "v7" : []
-    }
-
-E = { "E1" : ["v1","v2","v3"] ,
-      "E2" : ["v2","v3"],
-      "E3" : ["v3","v5","v6"] ,
-      "E4" : ["v4"]
-    }
-test = Hypergraph(V,E)
-#plt.figure("Test :-D",figsize=(20,10))
-#ax = plt.axes()
-#ax.set_aspect("equal")
-#plt.axis([-0.1,1.1,-0.1,1.1])
-#plt.axis("off")
-test.show()
-#ax.add_line(plt.Line2D([0,1], [0,1],color="green"))
-#plt.plot(0, 1, '-g')  # solid green
-#plt.show()
-print(test.checkCliques())
+print("\n\n\n\n")
+print("Is Hypertree :",test_hypertree(graphe))
