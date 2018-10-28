@@ -165,12 +165,12 @@ class Hypergraph :
                             temp = pos[self.E[e][j]]
                             line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 10,alpha = 0.5)
                             ax.add_line(line)
-                            plt.pause(1)
+                            plt.pause(0.5)
                             line.set_linewidth(5)
-
+                            plt.pause(0.5)
                 elif len(self.E[e]) == 1: # Circle
                     pass
-                plt.pause(2)
+                plt.pause(1)
             plt.show()
 
 def printMatrix(Matrix) :
@@ -246,7 +246,7 @@ E = { "E1" : ["v1","v2","v3"] ,
       "E4" : ["v4"]
     }
 test = Hypergraph(V,E)
-plt.figure("Test :-D",figsize=(20,10))
+#plt.figure("Test :-D",figsize=(20,10))
 #ax = plt.axes()
 #ax.set_aspect("equal")
 #plt.axis([-0.1,1.1,-0.1,1.1])
