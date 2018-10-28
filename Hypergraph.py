@@ -113,10 +113,10 @@ class Hypergraph :
         cliques = self.find_cliques(self.V)
         print("Les cliques maximales du graphe :",cliques)
         check = True
-        E_values = list(self.E.values())
-
+        E_values = [set(liste) for liste in self.E.values()]
+        
         for clique in cliques :
-            check = sorted(list(clique)) in E_values
+            check = clique in E_values
             if not check :
                 break
 
