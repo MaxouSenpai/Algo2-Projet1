@@ -141,6 +141,7 @@ class Hypergraph :
             o = 360/len(self.V)
             angle = 90
             pos = dict()
+            color = ["deeppink","pink", "orange", "gold", "darkkhaki", "purple", "green", "lime", "blue", "cyan", "turquoise", "navy", "brown", "chocolate", "darkslategray"]
 
             for v in self.V:
                 x = 0.5 + np.cos(np.deg2rad(angle))*0.5
@@ -149,8 +150,6 @@ class Hypergraph :
                 ax.add_artist(plt.Circle((x, y), 0.075, color="red"))
                 plt.text(x,y,v,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
                 angle-=o
-
-            color = ['b','g','y','k','r','c','m']
 
             for c in range(len(self.E.keys())):
 
