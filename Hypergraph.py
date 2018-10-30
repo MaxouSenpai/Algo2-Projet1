@@ -144,23 +144,26 @@ class Hypergraph :
 
             for v in self.V:
                 pos[v] = y
-                ax.add_artist(plt.Circle((0, y), 0.02, color="red",clip_on=False))
+                ax.add_artist(plt.Circle((0, y), 0.03, color="red",clip_on=False))
                 plt.text(0,y,v,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
                 y-= dy
 
         if len(self.E.keys()) > 0:
             y = 1
             dy = 1/len(self.E.keys())
+            color = ["deeppink","pink", "orange", "gold", "darkkhaki", "purple", "green", "lime", "blue", "cyan", "turquoise", "navy", "brown", "chocolate", "darkslategray"]
+            i = 0
 
             for e in self.E.keys():
-                ax.add_artist(plt.Circle((1, y), 0.02, color="red",clip_on=False))
+                ax.add_artist(plt.Circle((1, y), 0.03, color="red",clip_on=False))
                 plt.text(1,y,e,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
 
                 for v in self.E[e]:
-                    line = plt.Line2D([0.98,0.02], [y,pos[v]],color=(np.random.random(),np.random.random(),np.random.random()),linewidth=5,alpha=0.5,clip_on=False)
+                    line = plt.Line2D([0.97,0.023], [y,pos[v]],color=color[i],linewidth=5,alpha=0.5,clip_on=False)
                     ax.add_line(line)
 
                 y -= dy
+                i+=1
 
         plt.show()
 
@@ -201,7 +204,6 @@ def test_hypertree(hypergraph) :
     return hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
 
 graphe = random_graph_generator(randint(1,15),randint(1,15))
-#graphe = random_graph_generator(15,15)
 print("Vertices of graph:")
 print(graphe.Vertices)
 print("Edges of graph:")
