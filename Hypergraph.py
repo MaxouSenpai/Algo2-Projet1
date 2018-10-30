@@ -129,11 +129,12 @@ class Hypergraph :
                 res += letter
         return int(res)
 
-    def showPrimalGraph(self):
-        plt.figure(figsize=(20,10))
+    def showPrimalGraph(self,isHT):
+        plt.figure("Primal Graph",figsize=(20,10))
         ax = plt.axes()
         ax.set_aspect("equal")
         plt.axis("off")
+        plt.text(0.5,1.1,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
 
         pos = dict()
 
@@ -166,11 +167,13 @@ class Hypergraph :
 
         plt.show()
 
-    def showIncidenceGraph(self):
+    def showIncidenceGraph(self,isHT):
+        plt.figure("Incidence Graph",figsize=(20,10))
         ax = plt.axes()
         ax.set_aspect("equal")
         plt.axis([-0.1,1.1,-0.1,1.1])
         plt.axis("off")
+        plt.text(0.5,1.15,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
 
         if len(self.V) > 0: # Prevent division by zero
             o = 360/len(self.V)
@@ -229,7 +232,8 @@ def test_hypertree(hypergraph) :
     hypergraphDual = hypergraph.generateDualGraph()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
     print("Is Hypertree : ",hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal())
-    hypergraphDual.show()
+    #hypergraphDual.showIncidenceGraph(True)
+    #hypergraphDual.showPrimalGraph(True)
 
 def testPrint(graphe) :
     print("Vertices of graph :\n",graphe.Vertices)
