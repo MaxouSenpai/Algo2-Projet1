@@ -376,3 +376,39 @@ printMatrix(grapheDual.incidenceMatrixTranspose)
 #G = nx.Graph(g)
 #nx.draw(G)
 #plt.draw()
+
+"""
+    def show(self):
+        plt.figure(figsize=(20,10))
+        ax = plt.axes()
+        plt.axis([0,1,3.5,1])
+        ax.set_aspect('equal')
+        plt.axis("off")
+
+        pos = dict()
+        color = ["deeppink","pink", "orange", "gold", "darkkhaki", "purple", "green", "lime", "blue", "cyan", "turquoise", "navy", "brown", "chocolate", "darkslategray"]
+
+        y = 1
+
+        for v in self.V:
+
+            pos[v] = y
+            ax.add_artist(plt.Circle((0.2-3, y), 0.1, color="red",clip_on=False))
+            plt.text(0.2-3,y,v,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
+            y-= 0.3
+
+        y = 1
+
+        for e in self.E.keys():
+
+            ax.add_artist(plt.Circle((0.8+3, y), 0.1, color="red",clip_on=False))
+            plt.text(0.8+3,y,e,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
+
+            for v in self.E[e]:
+                line = plt.Line2D([0.7-3.4,0.3+3.4], [y,pos[v]],color=(np.random.random(),np.random.random(),np.random.random()),linewidth=5,alpha=0.5,clip_on=False)
+                ax.add_line(line)
+
+            y -= 0.3
+
+        plt.show()
+"""

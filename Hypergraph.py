@@ -1,7 +1,6 @@
 from random import random,randint,choice
 from Graph import Graph
 import matplotlib.pyplot as plt
-from matplotlib import patches
 import numpy as np
 
 class Hypergraph :
