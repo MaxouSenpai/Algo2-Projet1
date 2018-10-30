@@ -1,6 +1,7 @@
 from random import random,randint,choice
 from Graph import Graph
 import matplotlib.pyplot as plt
+import numpy as np
 
 class Hypergraph :
     def __init__(self,V={},E={},incidenceMatrix = []) :
@@ -128,7 +129,7 @@ class Hypergraph :
                 res += letter
         return int(res)
 
-    def show(self):
+    def showPrimalGraph(self):
         plt.figure(figsize=(20,10))
         ax = plt.axes()
         ax.set_aspect("equal")
@@ -164,6 +165,43 @@ class Hypergraph :
                 i+=1
 
         plt.show()
+
+    def showIncidenceGraph(self):
+        ax = plt.axes()
+        ax.set_aspect("equal")
+        plt.axis([-0.1,1.1,-0.1,1.1])
+        plt.axis("off")
+
+        if len(self.V) > 0: # Prevent division by zero
+            o = 360/len(self.V)
+            angle = 90
+            pos = dict()
+            color = ["deeppink","pink", "orange", "gold", "darkkhaki", "purple", "green", "lime", "blue", "cyan", "turquoise", "navy", "brown", "chocolate", "darkslategray"]
+
+            for v in self.V:
+                x = 0.5 + np.cos(np.deg2rad(angle))*0.5
+                y = 0.5 + np.sin(np.deg2rad(angle))*0.5
+                pos[v] = (x,y)
+                ax.add_artist(plt.Circle((x, y), 0.075, color="red"))
+                plt.text(x,y,v,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+                angle-=o
+
+            for c in range(len(self.E.keys())):
+
+                e = list(self.E.keys())[c]
+
+                if len(self.E[e]) > 1:
+
+                    for i in range(len(self.E[e])):
+
+                        origin = pos[self.E[e][i]]
+
+                        for j in range(i+1,len(self.E[e])):
+                            temp = pos[self.E[e][j]]
+                            line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 5,alpha = 0.5)
+                            ax.add_line(line)
+
+            plt.show()
 
 def printMatrix(Matrix) :
     n = len(Matrix)
