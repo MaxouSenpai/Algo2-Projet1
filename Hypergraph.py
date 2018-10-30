@@ -129,13 +129,19 @@ class Hypergraph :
                 res += letter
         return int(res)
 
-    def showPrimalGraph(self,isHT):
-        plt.figure("Primal Graph",figsize=(20,10))
+    def show(self,isHT):
+        plt.figure("SUPER INTERFACE DE OUF",figsize=(20,10))
         ax = plt.axes()
+        plt.text(0.5,1.1,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=30,color="black")
         ax.set_aspect("equal")
         plt.axis("off")
-        plt.text(0.5,1.1,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
 
+        self.showPrimalGraph(ax,-0.6)
+        self.showIncidenceGraph(ax,0.6)
+        plt.show()
+
+    def showPrimalGraph(self,ax,dx):
+        plt.text(0.5+dx,1.1,"Primal Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
         pos = dict()
 
         if len(self.V) > 0:
@@ -144,8 +150,8 @@ class Hypergraph :
 
             for v in self.V:
                 pos[v] = y
-                ax.add_artist(plt.Circle((0, y), 0.03, color="red",clip_on=False))
-                plt.text(0,y,v,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
+                ax.add_artist(plt.Circle((0+dx, y), 0.03, color="red",clip_on=False))
+                plt.text(0+dx,y,v,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
                 y-= dy
 
         if len(self.E.keys()) > 0:
@@ -155,25 +161,18 @@ class Hypergraph :
             i = 0
 
             for e in self.E.keys():
-                ax.add_artist(plt.Circle((1, y), 0.03, color="red",clip_on=False))
-                plt.text(1,y,e,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
+                ax.add_artist(plt.Circle((1+dx, y), 0.03, color="red",clip_on=False))
+                plt.text(1+dx,y,e,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
 
                 for v in self.E[e]:
-                    line = plt.Line2D([0.97,0.023], [y,pos[v]],color=color[i],linewidth=5,alpha=0.5,clip_on=False)
+                    line = plt.Line2D([0.97+dx,0.023+dx], [y,pos[v]],color=color[i],linewidth=5,alpha=0.5,clip_on=False)
                     ax.add_line(line)
 
                 y -= dy
                 i+=1
 
-        plt.show()
-
-    def showIncidenceGraph(self,isHT):
-        plt.figure("Incidence Graph",figsize=(20,10))
-        ax = plt.axes()
-        ax.set_aspect("equal")
-        plt.axis([-0.1,1.1,-0.1,1.1])
-        plt.axis("off")
-        plt.text(0.5,1.15,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+    def showIncidenceGraph(self,ax,dx):
+        plt.text(0.5+dx,1.1,"Incidence Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
 
         if len(self.V) > 0: # Prevent division by zero
             o = 360/len(self.V)
@@ -182,10 +181,10 @@ class Hypergraph :
             color = ["deeppink","pink", "orange", "gold", "darkkhaki", "purple", "green", "lime", "blue", "cyan", "turquoise", "navy", "brown", "chocolate", "darkslategray"]
 
             for v in self.V:
-                x = 0.5 + np.cos(np.deg2rad(angle))*0.5
+                x = 0.5 + dx + np.cos(np.deg2rad(angle))*0.5
                 y = 0.5 + np.sin(np.deg2rad(angle))*0.5
                 pos[v] = (x,y)
-                ax.add_artist(plt.Circle((x, y), 0.075, color="red"))
+                ax.add_artist(plt.Circle((x, y), 0.075, color="red",clip_on=False))
                 plt.text(x,y,v,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
                 angle-=o
 
@@ -201,10 +200,8 @@ class Hypergraph :
 
                         for j in range(i+1,len(self.E[e])):
                             temp = pos[self.E[e][j]]
-                            line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 5,alpha = 0.5)
+                            line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 5,alpha = 0.5,clip_on=False)
                             ax.add_line(line)
-
-            plt.show()
 
 def printMatrix(Matrix) :
     n = len(Matrix)
@@ -232,6 +229,7 @@ def test_hypertree(hypergraph) :
     hypergraphDual = hypergraph.generateDualGraph()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
     print("Is Hypertree : ",hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal())
+    hypergraphDual.show(True)
     #hypergraphDual.showIncidenceGraph(True)
     #hypergraphDual.showPrimalGraph(True)
 
