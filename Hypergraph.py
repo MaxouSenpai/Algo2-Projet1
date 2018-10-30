@@ -228,10 +228,10 @@ def random_graph_generator(n,m):
 def test_hypertree(hypergraph) :
     hypergraphDual = hypergraph.generateDualGraph()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
-    print("Is Hypertree : ",hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal())
-    hypergraphDual.show(True)
-    #hypergraphDual.showIncidenceGraph(True)
-    #hypergraphDual.showPrimalGraph(True)
+    isHT = hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
+    hypergraphDual.show(isHT)
+    #hypergraphDual.showIncidenceGraph(isHT)
+    #hypergraphDual.showPrimalGraph(isHT)
 
 def testPrint(graphe) :
     print("Vertices of graph :\n",graphe.Vertices)
