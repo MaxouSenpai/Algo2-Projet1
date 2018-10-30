@@ -51,7 +51,7 @@ class Graph :
         trying to find a non-chordal cycle.
         """
 
-        unnumbered = self.V
+        unnumbered = set(self.V)
         if s is None:
             s = choice(list(self.V))
 

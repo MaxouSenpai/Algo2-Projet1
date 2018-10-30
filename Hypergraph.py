@@ -171,7 +171,7 @@ def printMatrix(Matrix) :
     print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
 
 def random_graph_generator(n,m):
-    V = set(["v" + str(i) for i in range(1,n+1)])
+    V = set("v" + str(i) for i in range(1,n+1))
     E = {"E" + str(i):[] for i in range(1,m+1) }
 
     incidenceMatrix = [[0 for _ in range(m)] for _ in range(n)]
