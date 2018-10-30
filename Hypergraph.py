@@ -1,6 +1,7 @@
 from random import random,randint,choice
 from Graph import Graph
 import matplotlib.pyplot as plt
+from matplotlib import patches
 import numpy as np
 
 class Hypergraph :
@@ -131,47 +132,38 @@ class Hypergraph :
         return int(res)
 
     def show(self):
+        plt.figure(figsize=(20,10))
         ax = plt.axes()
         ax.set_aspect("equal")
-        plt.axis([-0.1,1.1,-0.1,1.1])
         plt.axis("off")
-        #plt.draw()
 
-        if len(self.V) > 0: # Prevent division by zero
-            o = 360/len(self.V)
-            angle = 90
-            pos = dict()
-            color = ["deeppink","pink", "orange", "gold", "darkkhaki", "purple", "green", "lime", "blue", "cyan", "turquoise", "navy", "brown", "chocolate", "darkslategray"]
+        pos = dict()
+
+        if len(self.V) > 0:
+            y = 1
+            dy = 1/len(self.V)
 
             for v in self.V:
-                x = 0.5 + np.cos(np.deg2rad(angle))*0.5
-                y = 0.5 + np.sin(np.deg2rad(angle))*0.5
-                pos[v] = (x,y)
-                ax.add_artist(plt.Circle((x, y), 0.075, color="red"))
-                plt.text(x,y,v,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
-                angle-=o
+                pos[v] = y
+                ax.add_artist(plt.Circle((0, y), 0.02, color="red",clip_on=False))
+                plt.text(0,y,v,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
+                y-= dy
 
-            for c in range(len(self.E.keys())):
+        if len(self.E.keys()) > 0:
+            y = 1
+            dy = 1/len(self.E.keys())
 
-                e = list(self.E.keys())[c]
+            for e in self.E.keys():
+                ax.add_artist(plt.Circle((1, y), 0.02, color="red",clip_on=False))
+                plt.text(1,y,e,horizontalalignment="center",verticalalignment="center",fontsize=10,color="black")
 
-                if len(self.E[e]) > 1:
+                for v in self.E[e]:
+                    line = plt.Line2D([0.98,0.02], [y,pos[v]],color=(np.random.random(),np.random.random(),np.random.random()),linewidth=5,alpha=0.5,clip_on=False)
+                    ax.add_line(line)
 
-                    for i in range(len(self.E[e])):
+                y -= dy
 
-                        origin = pos[self.E[e][i]]
-
-                        for j in range(i+1,len(self.E[e])):
-                            temp = pos[self.E[e][j]]
-                            line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 10,alpha = 0.5)
-                            ax.add_line(line)
-                            plt.pause(0.5)
-                            line.set_linewidth(5)
-                            plt.pause(0.5)
-                elif len(self.E[e]) == 1: # Circle
-                    pass
-                plt.pause(1)
-            plt.show()
+        plt.show()
 
 def printMatrix(Matrix) :
     n = len(Matrix)
@@ -210,6 +202,7 @@ def test_hypertree(hypergraph) :
     return hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
 
 graphe = random_graph_generator(randint(1,15),randint(1,15))
+#graphe = random_graph_generator(15,15)
 print("Vertices of graph:")
 print(graphe.Vertices)
 print("Edges of graph:")
