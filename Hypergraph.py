@@ -132,16 +132,17 @@ class Hypergraph :
     def show(self,isHT):
         plt.figure("SUPER INTERFACE DE OUF",figsize=(20,10))
         ax = plt.axes()
-        plt.text(0.5,1.1,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=30,color="black")
         ax.set_aspect("equal")
         plt.axis("off")
+        plt.axis([0,1,0,1.2])
+        plt.text(0.5,1.3,"This is an Hyper Tree" if isHT else "This is not an Hyper Tree" ,horizontalalignment="center",verticalalignment="center",fontsize=30,color="black")
 
         self.showPrimalGraph(ax,-0.6)
         self.showIncidenceGraph(ax,0.6)
         plt.show()
 
     def showIncidenceGraph(self,ax,dx):
-        plt.text(0.5+dx,1.1,"Incidence Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+        plt.text(0.5+dx,1.15,"Incidence Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
         pos = dict()
 
         if len(self.V) > 0:
@@ -172,7 +173,7 @@ class Hypergraph :
                 i+=1
 
     def showPrimalGraph(self,ax,dx):
-        plt.text(0.5+dx,1.1,"Primal Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+        plt.text(0.5+dx,1.15,"Primal Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
 
         if len(self.V) > 0: # Prevent division by zero
             o = 360/len(self.V)
