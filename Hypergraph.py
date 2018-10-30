@@ -140,8 +140,8 @@ class Hypergraph :
         self.showIncidenceGraph(ax,0.6)
         plt.show()
 
-    def showPrimalGraph(self,ax,dx):
-        plt.text(0.5+dx,1.1,"Primal Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+    def showIncidenceGraph(self,ax,dx):
+        plt.text(0.5+dx,1.1,"Incidence Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
         pos = dict()
 
         if len(self.V) > 0:
@@ -171,8 +171,8 @@ class Hypergraph :
                 y -= dy
                 i+=1
 
-    def showIncidenceGraph(self,ax,dx):
-        plt.text(0.5+dx,1.1,"Incidence Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
+    def showPrimalGraph(self,ax,dx):
+        plt.text(0.5+dx,1.1,"Primal Graph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
 
         if len(self.V) > 0: # Prevent division by zero
             o = 360/len(self.V)
