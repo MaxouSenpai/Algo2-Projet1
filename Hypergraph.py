@@ -1,5 +1,6 @@
 from random import random,randint,choice
 from Graph import Graph
+from cover_hypertree import cover_hypertree
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -230,6 +231,12 @@ def test_hypertree(hypergraph) :
     hypergraphDual = hypergraph.generateDualGraph()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
     isHT = hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
+    if isHT :
+        solution = cover_hypertree(hypergraph)
+        if solution :
+            print("There is an exact cover for this hypertree : " ,solution)  
+        else :
+            print("There is not an exact cover for this hypertree.")
     hypergraphDual.show(isHT)
     #hypergraphDual.showIncidenceGraph(isHT)
     #hypergraphDual.showPrimalGraph(isHT)
