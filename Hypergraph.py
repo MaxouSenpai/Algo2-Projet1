@@ -7,13 +7,13 @@ import numpy as np
 class Hypergraph :
     def __init__(self,V={},E={},incidenceMatrix = []) :
         self.V = V
+        # Ensemble des sommets
         self.E = E
-        self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.IncidenceGraphMatrix()
+        # Dictionnaire contient les hyper-arêtes comme cles et les sommets qui appartiennent a cette hyper-arête comme valeurs
+        self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.getIncidenceGraphMatrix()
         self.dicoV = self.getDicoV()
-        self.Vertices = self.getVertices()
-        self.Edges = self.getEdges()
-        self.PrimalGraph = self.PrimalGraphMatrix()
-        self.incidenceMatrixTranspose = self.incidenceMatrix_Transpose()
+        # Dictionnaire contient les sommets comme cles et les sommets contenus dans la même hyper-arête
+        self.incidenceMatrixTranspose = self.getIncidenceMatrixTranspose()
 
     def getVertices(self) :
         return self.V
@@ -41,7 +41,7 @@ class Hypergraph :
                             dicoV[self.E[hyperedge][i]].append(self.E[hyperedge][j])
         return dicoV
 
-    def PrimalGraphMatrix(self) :
+    def getPrimalGraphMatrix(self) :
         n = len(self.V)
         Matrix = [[ 0 for _ in range(n)] for _ in range(n)]
         for Vertex in self.dicoV :
@@ -50,7 +50,7 @@ class Hypergraph :
 
         return Matrix
 
-    def IncidenceGraphMatrix(self) :
+    def getIncidenceGraphMatrix(self) :
         IncidenceMatrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
         for hyperedge in self.E :
             for Vertex in self.E[hyperedge] :
@@ -58,7 +58,7 @@ class Hypergraph :
 
         return IncidenceMatrix
 
-    def incidenceMatrix_Transpose(self) :
+    def getIncidenceMatrixTranspose(self) :
 
         n = len(self.incidenceMatrix[0])
         MatrixTranspose = []
@@ -206,26 +206,37 @@ class Hypergraph :
                             ax.add_line(line)
 
 def printMatrix(Matrix) :
-    n = len(Matrix)
-    m = len(Matrix[0])
-    print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
+    if Matrix :
+        n = len(Matrix)
+        m = len(Matrix[0])
+        print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
+    else :
+        print("Matrix vide")
 
-def random_graph_generator(n,m):
+def random_graph_generator():
+    n = randint(1,15)
+    max_hyperedge = 2**n - 1
+    m = randint(1,15)
+    while m > max_hyperedge :
+        m = randint(1,15)
+
     V = set("v" + str(i) for i in range(1,n+1))
-    E = {"E" + str(i):[] for i in range(1,m+1) }
+    incidenceMatrix = []
+    i = 0
+    while i < m :
+        row = [ 0 if random() < 0.5 else 1 for j in range(n)]
+        if row not in incidenceMatrix :
+            incidenceMatrix.append(row)
+            i += 1
 
-    incidenceMatrix = [[0 for _ in range(m)] for _ in range(n)]
+    n = len(incidenceMatrix[0])
+    MatrixTranspose = []
     for i in range(n):
-        for j in range(m):
-            if random() < 0.5:
+        MatrixTranspose.append([row[i] for row in incidenceMatrix])
 
-                Vertex = "v" + str(i+1)
-                hyperedge = "E" + str(j+1)
-                E[hyperedge].append(Vertex)
+    E = {"E" + str(j+1):["v" + str(i+1) for i in range(n) if MatrixTranspose[i][j]] for j in range(m) }
 
-                incidenceMatrix[i][j] = 1
-
-    return Hypergraph(V,E,incidenceMatrix)
+    return Hypergraph(V,E,MatrixTranspose)
 
 def test_hypertree(hypergraph) :
     hypergraphDual = hypergraph.generateDualGraph()
@@ -234,7 +245,7 @@ def test_hypertree(hypergraph) :
     if isHT :
         solution = cover_hypertree(hypergraph)
         if solution :
-            print("There is an exact cover for this hypertree : " ,solution)  
+            print("There is an exact cover for this hypertree : " ,solution)
         else :
             print("There is not an exact cover for this hypertree.")
     hypergraphDual.show(isHT)
@@ -242,17 +253,17 @@ def test_hypertree(hypergraph) :
     #hypergraphDual.showPrimalGraph(isHT)
 
 def testPrint(graphe) :
-    print("Vertices of graph :\n",graphe.Vertices)
-    print("Edges of graph :\n",graphe.Edges)
+    print("Vertices of graph :\n",graphe.getVertices())
+    print("Edges of graph :\n",graphe.getEdges())
     print("Adjacency Matrix :")
-    printMatrix(graphe.PrimalGraph)
+    printMatrix(graphe.getPrimalGraphMatrix())
     print("Incidence Matrix :")
     printMatrix(graphe.incidenceMatrix)
     print("Incidence Matrix Transpose")
     printMatrix(graphe.incidenceMatrixTranspose)
     print("\n\n\n\n")
 
-graphe = random_graph_generator(randint(1,15),randint(1,15))
+graphe = random_graph_generator()
 testPrint(graphe)
 grapheDual = graphe.generateDualGraph()
 testPrint(grapheDual)

@@ -15,19 +15,18 @@ def cover_hypertree(hypertree) :
     11 Fin
     """
     HyperedgeList = list(hypertree.E.keys())
-    #print(HyperedgeList)
-    matrix = hypertree.incidenceMatrixTranspose
     check = findAVertex(hypertree.incidenceMatrix)
-    mat = copy.deepcopy(matrix)
+    mat = copy.deepcopy(hypertree.incidenceMatrixTranspose)
+    lineIteration ,Rows = howMuch(hypertree.incidenceMatrixTranspose)
+    allSolution = []
     solution = []
-    while check :
+    while check and lineIteration > 0 :
         row = 0
         while row < len(mat) :
             column = find_column(mat)[0]
             columnslist = []
             rowslist = []
             colonne = 0
-            printMatrix(mat)
             print("Choisir une ligne :",row)
             if mat[row][column] :
                 solution.append(HyperedgeList[row])
@@ -49,7 +48,6 @@ def cover_hypertree(hypertree) :
                             if mat[line][colonne] :
                                 print("Pour chaque ligne I telle que AIJ = 1")
                                 print("I :",HyperedgeList[line],"J :",colonne)
-                                print(rowslist)
                                 if line not in rowslist  :
                                     rowslist.append(line)
 
@@ -60,11 +58,12 @@ def cover_hypertree(hypertree) :
                 if rowslist :
                     mat = cut_row(mat,rowslist)
                     deleteRowsName = [HyperedgeList[i] for i in rowslist]
+                    print("Cut rows :"," ".join([HyperedgeList[i] for i in rowslist]))
                     for RowName in deleteRowsName :
 
                         HyperedgeList.remove(RowName)
 
-                    print("Cut rows :"," ".join([HyperedgeList[i] for i in rowslist]))
+
                     printMatrix(mat)
 
                 if columnslist :
@@ -72,17 +71,36 @@ def cover_hypertree(hypertree) :
                     print("Cut columns :"," ".join([str(i) for i in columnslist]))
                     printMatrix(mat)
             row += 1
-            if (row == len(matrix) and not mat) or not mat :
-                check = False
-                break
-            else :
+
+            if mat :
                 column ,min = find_column(mat)
                 if not min :
+                    lineIteration -= 1
                     solution = []
-                    mat = copy.deepcopy(matrix)
+                    mat = copy.deepcopy(hypertree.incidenceMatrixTranspose)
+                    HyperedgeList = list(hypertree.E.keys())
+            elif not mat :
+                allSolution.append(solution)
+                lineIteration -= 1
+                if lineIteration :
+                    row = Rows[len(Rows)-lineIteration]
+                    solution = []
+                    mat = copy.deepcopy(hypertree.incidenceMatrixTranspose)
                     HyperedgeList = list(hypertree.E.keys())
 
-    return solution
+    return allSolution
+
+def howMuch(mat) :
+    column = find_column(mat)[0]
+    lst = []
+    line = 0
+    row = 0
+    while row < len(mat) :
+        if mat[row][column] == 1 :
+            lst.append(row)
+            line += 1
+        row += 1
+    return line,lst
 
 def find_column(mat) :
     min = len(mat)
@@ -100,7 +118,7 @@ def find_column(mat) :
 def findAVertex(mat) :
     for row in mat :
         somme = sum(row)
-        if somme == 0 or somme == len(mat[0]) :
+        if somme == 0 or (somme == len(mat[0]) and somme != 1) :
             return False
     return True
 
