@@ -1,6 +1,21 @@
 import copy
 
+
 def cover_hypertree(hypertree) :
+
+    matrix = modifyMat(hypertree.incidenceMatrixTranspose)
+
+    solution = cover(matrix,[],[])
+
+    if solution :
+        print("\nThere is "+str(len(solution))+" exact cover for this hypertree : ")
+        print("\n".join([" ".join([str(solution[i][j]) for j in range(len(solution[i]))]) for i in range(len(solution))]))
+    else :
+        print("There is not an exact cover for this hypertree.")
+
+
+
+def cover(matrix,solution=[],allSolution = []) :
     """
     1  Tant que la matrice A n'est pas vide faire
     2  | Choisir la première colonne C contenant un minimum de 1 (déterministe);
@@ -15,132 +30,121 @@ def cover_hypertree(hypertree) :
     11 Fin
     """
 
-    check = findAVertex(hypertree.incidenceMatrix)
-    mat = modifyMat(copy.deepcopy(hypertree.incidenceMatrixTranspose))
-    lineIteration ,Rows = howMuch(mat)
-    allSolution = []
-    solution = []
-    while check and lineIteration > 0 :
-        row = 1
-        while row < len(mat) :
-            column = find_column(mat)[0]
-            columnslist = []
-            rowslist = []
-            colonne = 1
-            #print("Choisir une ligne :",row)
-            if mat[row][column] :
-                solution.append(mat[row][0])
-                #print("Choisir une ligne L telle que ALC = 1")
-                #print("L :",mat[row][0],"C :",column)
-                print("solution :",solution)
+    mat = copy.deepcopy(matrix)
+    lineIteration , Rows = howMuch(mat)
 
+    while lineIteration > 0 :
 
-                while colonne < len(mat[0]) :
-                    line = 1
+        row = Rows[len(Rows)-lineIteration]
+        column = find_column(mat)[0]
+        columnslist = []
+        rowslist = []
 
-                    if mat[row][colonne] :
-                        #print("Pour chaque colonne J telle que ALJ = 1")
-                        #print("L :",mat[row][0],"J :",colonne)
+        print("lineIteration :",lineIteration)
+        print("Row :",mat[row][0])
+        print("solution :",solution)
 
-                        while line < len(mat) :
+        solution.append(mat[row][0])
 
+        #print("Une ligne L :",mat[row][0]," et C :",mat[0][column],"telle que ALC = 1\n")
+        print("solution :",solution)
 
-                            if mat[line][colonne] :
-                                #print("Pour chaque ligne I telle que AIJ = 1")
-                                #print("I :",mat[line][0],"J :",colonne)
-                                if line not in rowslist  :
-                                    rowslist.append(line)
+        for colonne in range(1,len(mat[0])) :
 
-                            line += 1
+            if mat[row][colonne] :
+                #print("L :",mat[row][0]," et Colonne J :",mat[0][colonne]," telle que ALJ = 1\n")
+                for line in range(1,len(mat)) :
 
-                        columnslist.append(colonne)
-                    colonne += 1
-                if rowslist :
-                    print("Cut rows :"," ".join([mat[i][0] for i in rowslist]))
-                    mat = cut_row(mat,rowslist)
-                    printMatrix(mat)
+                    if mat[line][colonne] :
+                        #print("Ligne I :",mat[line][0]," et J :",mat[0][colonne]," telle que AIJ = 1\n")
+                        if line not in rowslist  :
+                            rowslist.append(line)
 
-                if columnslist :
-                    mat = cut_column(mat,columnslist)
-                    print("Cut columns :"," ".join([str(i) for i in columnslist]))
-                    printMatrix(mat)
-            row += 1
+                columnslist.append(colonne)
 
-            if mat :
-                column ,min = find_column(mat)
-                if not min :
-                    lineIteration -= 1
-                    if lineIteration :
-                        row = Rows[len(Rows)-lineIteration]
-                        solution = []
-                        mat = modifyMat(copy.deepcopy(hypertree.incidenceMatrixTranspose))
-            elif not mat :
-                allSolution.append(solution)
+        mat = cutMatrix(mat,rowslist,columnslist)
+
+        if mat :
+            if not find_column(mat)[1] :
                 lineIteration -= 1
                 if lineIteration :
-                    row = Rows[len(Rows)-lineIteration]
-                    solution = []
-                    mat = modifyMat(copy.deepcopy(hypertree.incidenceMatrixTranspose))
+                    mat = copy.deepcopy(matrix)
+            else :
+                cover(mat,solution,allSolution)
+                lineIteration -= 1
+                mat = copy.deepcopy(matrix)
+
+        elif not mat :
+            lineIteration -= 1
+            print("Solution found : ",solution)
+            if solution not in allSolution :
+                allSolution.append(solution[:])
+            mat = copy.deepcopy(matrix)
+
+        solution.pop()
 
     return allSolution
 
-def findAVertex(mat) :
-    for row in mat :
-        somme = sum(row)
-        if somme == 0 or (somme == len(mat[0]) and somme != 1) :
-            return False
-    return True
-
 def howMuch(mat) :
     column = find_column(mat)[0]
-    lst = []
-    line = 0
-    row = 1
-    while row < len(mat) :
+    rows = []
+    iteration = 0
+
+    for row in range(1,len(mat)) :
         if mat[row][column] == 1 :
-            lst.append(row)
-            line += 1
-        row += 1
-    return line,lst
+            rows.append(row)
+            iteration += 1
+
+    return iteration,rows
 
 def find_column(mat) :
     min = len(mat)-1
     column = 1
     x = 0
     for i in range(1,len(mat[0])) :
-        for row in mat[1:] :
-            x += row[i]
+
+        x = sum( row[i] for row in mat[1:])
         if x <  min :
             min = x
             column = i
-        x = 0
+
     return column, min
 
-def cut_row(mat,rowslist) :
+def cutMatrix(matrix,rowslist,columnslist) :
+    mat = copy.deepcopy(matrix)
+    printMatrix(mat)
 
-    return [ mat[i] for i in range(len(mat)) if i not in rowslist]
+    if rowslist :
+        print("Cut rows :"," ".join([mat[i][0] for i in rowslist]))
+        mat = [ mat[i] for i in range(len(mat)) if i not in rowslist]
+        printMatrix(mat)
 
-def cut_column(mat,columnslist) :
-    newmat = []
-    for row in mat :
-        temp = [ row[i] for i in range(len(mat[0])) if i not in columnslist ]
-        if len(temp) > 1 :
-            newmat.append(temp)
-    return newmat
-
-def modifyMat(matrix) :
-    newmat = [[i for i in range(len(matrix[0])+1)]]
-    for i in range(len(matrix)) :
-        matrix[i].insert(0,"E"+str(i+1))
-        newmat.append(matrix[i])
-    newmat[0][0] = "X "
-
-    return newmat
+    if columnslist :
+        print("Cut columns :"," ".join([str(i) for i in columnslist]))
+        newmat = []
+        for row in mat :
+            temp = [ row[i] for i in range(len(mat[0])) if i not in columnslist ]
+            if len(temp) > 1 :
+                newmat.append(temp)
+        mat = newmat
+        printMatrix(mat)
+    return mat
 
 def printMatrix(Matrix) :
     if Matrix :
         n = len(Matrix)
         m = len(Matrix[0])
-        print("\n".join(["   ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
+        print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
     else :
         print("Matrix vide")
+
+def modifyMat(mat) :
+    matrix = copy.deepcopy(mat)
+    newmat = [[i for i in range(len(matrix[0])+1)]]
+    newmat[0][0] = "X "
+
+    for i in range(len(matrix)) :
+        matrix[i].insert(0,"E"+str(i+1))
+        newmat.append(matrix[i])
+
+    return newmat

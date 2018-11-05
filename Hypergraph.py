@@ -1,6 +1,6 @@
 from random import random,randint,choice
 from Graph import Graph
-from cover_hypertree import cover_hypertree
+from cover_hypertree import *
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -24,6 +24,7 @@ class Hypergraph :
             for Vertex2 in self.dicoV[Vertex] :
                 if {Vertex,Vertex2} not in lst :
                     lst.append({Vertex,Vertex2})
+
         return lst
 
     def getDicoV(self) :
@@ -35,10 +36,10 @@ class Hypergraph :
             if x > 1 :
                 for i in range(x) :
                     for j in range(i+1,x) :
-                        if self.E[hyperedge][i] not in dicoV[self.E[hyperedge][j]] :
-                            dicoV[self.E[hyperedge][j]].append(self.E[hyperedge][i])
                         if self.E[hyperedge][j] not in dicoV[self.E[hyperedge][i]] :
                             dicoV[self.E[hyperedge][i]].append(self.E[hyperedge][j])
+                        if self.E[hyperedge][i] not in dicoV[self.E[hyperedge][j]] :
+                            dicoV[self.E[hyperedge][j]].append(self.E[hyperedge][i])
         return dicoV
 
     def getPrimalGraphMatrix(self) :
@@ -51,6 +52,7 @@ class Hypergraph :
         return Matrix
 
     def getIncidenceGraphMatrix(self) :
+
         IncidenceMatrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
         for hyperedge in self.E :
             for Vertex in self.E[hyperedge] :
@@ -61,10 +63,8 @@ class Hypergraph :
     def getIncidenceMatrixTranspose(self) :
 
         n = len(self.incidenceMatrix[0])
-        MatrixTranspose = []
 
-        for i in range(n):
-            MatrixTranspose.append([row[i] for row in self.incidenceMatrix])
+        MatrixTranspose = [[row[i] for row in self.incidenceMatrix] for i in range(n)]
 
         return MatrixTranspose
 
@@ -111,7 +111,8 @@ class Hypergraph :
 
     def checkCliques(self) :
         cliques = self.find_cliques(self.V)
-        print("Les cliques maximales du graphe :",cliques)
+        print("Les cliques maximales du graphe :")
+        print("\n".join([" ".join([str(list(cliques[i])[j]) for j in range(len(cliques[i]))]) for i in range(len(cliques))]))
         check = True
         E_values = [set(liste) for liste in self.E.values()]
 
@@ -122,13 +123,9 @@ class Hypergraph :
 
         return check
 
-
     def stringDigit(self,str) :
-        res = ""
-        for letter in str :
-            if letter.isdigit() :
-                res += letter
-        return int(res)
+
+        return int("".join([ letter for letter in str if letter.isdigit()]))
 
     def show(self,isHT):
         plt.figure("SUPER INTERFACE DE OUF",figsize=(20,10))
@@ -205,49 +202,42 @@ class Hypergraph :
                             line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 5,alpha = 0.5,clip_on=False)
                             ax.add_line(line)
 
-def printMatrix(Matrix) :
-    if Matrix :
-        n = len(Matrix)
-        m = len(Matrix[0])
-        print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
-    else :
-        print("Matrix vide")
 
 def random_graph_generator():
+
     n = randint(1,15)
+    V = set("v" + str(i) for i in range(1,n+1))
+
     max_hyperedge = 2**n - 1
     m = randint(1,15)
     while m > max_hyperedge :
         m = randint(1,15)
 
-    V = set("v" + str(i) for i in range(1,n+1))
-    incidenceMatrix = []
+    MatrixTranspose = []
     i = 0
     while i < m :
         row = [ 0 if random() < 0.5 else 1 for j in range(n)]
-        if row not in incidenceMatrix :
-            incidenceMatrix.append(row)
+        if row not in MatrixTranspose :
+            MatrixTranspose.append(row)
             i += 1
 
-    n = len(incidenceMatrix[0])
-    MatrixTranspose = []
-    for i in range(n):
-        MatrixTranspose.append([row[i] for row in incidenceMatrix])
+    n = len(MatrixTranspose[0])
 
-    E = {"E" + str(j+1):["v" + str(i+1) for i in range(n) if MatrixTranspose[i][j]] for j in range(m) }
+    incidenceMatrix = [[row[i] for row in MatrixTranspose] for i in range(n)]
 
-    return Hypergraph(V,E,MatrixTranspose)
+    E = {"E" + str(j+1):["v" + str(i+1) for i in range(n) if incidenceMatrix[i][j]] for j in range(m) }
+
+    return Hypergraph(V,E,incidenceMatrix)
 
 def test_hypertree(hypergraph) :
+
     hypergraphDual = hypergraph.generateDualGraph()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
     isHT = hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
+
     if isHT :
         solution = cover_hypertree(hypergraph)
-        if solution :
-            print("There is an exact cover for this hypertree : " ,solution)
-        else :
-            print("There is not an exact cover for this hypertree.")
+
     hypergraphDual.show(isHT)
     #hypergraphDual.showIncidenceGraph(isHT)
     #hypergraphDual.showPrimalGraph(isHT)
@@ -255,13 +245,13 @@ def test_hypertree(hypergraph) :
 def testPrint(graphe) :
     print("Vertices of graph :\n",graphe.getVertices())
     print("Edges of graph :\n",graphe.getEdges())
-    print("Adjacency Matrix :")
+    print("\nAdjacency Matrix :")
     printMatrix(graphe.getPrimalGraphMatrix())
-    print("Incidence Matrix :")
+    print("\nIncidence Matrix :")
     printMatrix(graphe.incidenceMatrix)
-    print("Incidence Matrix Transpose")
+    print("\nIncidence Matrix Transpose")
     printMatrix(graphe.incidenceMatrixTranspose)
-    print("\n\n\n\n")
+    print("\n\n\n")
 
 graphe = random_graph_generator()
 testPrint(graphe)
