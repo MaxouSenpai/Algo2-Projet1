@@ -6,29 +6,43 @@ import numpy as np
 
 class Hypergraph :
     def __init__(self,V={},E={},incidenceMatrix = []) :
+
         self.V = V
-        # Ensemble des sommets
+        # Ensemble des sommets de l'hypergraphe
         self.E = E
-        # Dictionnaire contient les hyper-arêtes comme cles et les sommets qui appartiennent a cette hyper-arête comme valeurs
+        # Dictionnaire contient les hyper-arêtes comme clés et les sommets qui appartiennent à cette hyper-arête comme valeurs
         self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.getIncidenceGraphMatrix()
+        # Matrice d'incidence de l'hypergraphe
         self.dicoV = self.getDicoV()
-        # Dictionnaire contient les sommets comme cles et les sommets contenus dans la même hyper-arête
+        # Dictionnaire contient les sommets comme clés et les sommets contenus dans la même hyper-arête
         self.incidenceMatrixTranspose = self.getIncidenceMatrixTranspose()
+        # Transposée de la matrice d'incidence
 
     def getVertices(self) :
+        """
+        Renvoie les sommets d'hypergraphe.
+        """
         return self.V
 
     def getEdges(self) :
-        lst = []
+        """
+        Renvoie les arêtes entre les sommets d'hypergraphe.
+        """
+        edgesList = []
+        # Liste qui contient tous les arêtes d'hypergraphe
         for Vertex in self.dicoV :
             for Vertex2 in self.dicoV[Vertex] :
-                if {Vertex,Vertex2} not in lst :
-                    lst.append({Vertex,Vertex2})
+                if {Vertex,Vertex2} not in edgesList :
+                    edgesList.append({Vertex,Vertex2})
 
-        return lst
+        return edgesList
 
     def getDicoV(self) :
-
+        """
+        Renvoie un dictionnaire avec les sommets d'hypergraphe comme clés,
+        et comme valeur des clés les autres sommets qui se trouvent dans
+        la même hyper-arête.
+        """
         dicoV = { Vertex :[] for Vertex in self.V }
 
         for hyperedge in self.E :
@@ -69,12 +83,18 @@ class Hypergraph :
         return MatrixTranspose
 
     def generateDualGraph(self) :
-
+        """
+        Générer l'hypergraphe dual H* (V*,E*) de l'hypergraphe H (V,E) ,
+        H* = (V*,E*) où V* = E et pour chaque sommet v dans V
+        nous avons une hyper-arête dans E* de la forme Ev = {X ⊆ E : v ∈ X}.
+        """
         n = len(self.incidenceMatrixTranspose)
         m = len(self.incidenceMatrixTranspose[0])
 
         V = set("E" + str(i+1) for i in range(n))
+        # V* = E
         E = { "Ev" + str(j+1) : [] for j in range(m)}
+        # Une hyper-arête dans E* de la forme Ev = {X ⊆ E : v ∈ X}
 
 
         for i in range(n) :
@@ -110,9 +130,16 @@ class Hypergraph :
         return cliques
 
     def checkCliques(self) :
+        """
+        Renvoie True si toute clique maximale (au sens de l’inclusion)
+        de taille deux ou plus dans le graphe primale est une hyper-arête
+        dans l’hypergraphe H(V,E) sinon False .
+        """
         cliques = self.find_cliques(self.V)
+        # Cliques maximales
         print("Les cliques maximales du graphe :")
-        print("\n".join([" ".join([str(list(cliques[i])[j]) for j in range(len(cliques[i]))]) for i in range(len(cliques))]))
+        print("\n".join(str(cliques[i]) for i in range(len(cliques))))
+
         check = True
         E_values = [set(liste) for liste in self.E.values()]
 
@@ -123,9 +150,9 @@ class Hypergraph :
 
         return check
 
-    def stringDigit(self,str) :
+    def stringDigit(self,word) :
 
-        return int("".join([ letter for letter in str if letter.isdigit()]))
+        return int("".join([ letter for letter in word if letter.isdigit()]))
 
     def show(self,isHT):
         plt.figure("SUPER INTERFACE DE OUF",figsize=(20,10))
@@ -204,12 +231,18 @@ class Hypergraph :
 
 
 def random_graph_generator():
-
+    """
+    Une fonction qui génère aléatoirement un hypergraphe de taille
+    raisonnable (maximum 15 sommets et hyper-arêtes) .
+    """
     n = randint(1,15)
+    # Nombre du sommet
     V = set("v" + str(i) for i in range(1,n+1))
 
     max_hyperedge = 2**n - 1
+    # Maximum d'hyper-arêtes qu'on peut obtenir avec n sommets
     m = randint(1,15)
+    # Nombre d'hyper-arêtes
     while m > max_hyperedge :
         m = randint(1,15)
 
@@ -217,7 +250,9 @@ def random_graph_generator():
     i = 0
     while i < m :
         row = [ 0 if random() < 0.5 else 1 for j in range(n)]
+        # Génère une hyper-arête
         if row not in MatrixTranspose :
+            # Vérifier qu'il existe par la même hyper-arête deux fois
             MatrixTranspose.append(row)
             i += 1
 
@@ -230,21 +265,30 @@ def random_graph_generator():
     return Hypergraph(V,E,incidenceMatrix)
 
 def test_hypertree(hypergraph) :
+    """
+    Une fonction qui prend en paramètre un hypergraphe affichera
+    à l'écran son hypergraphe dual sous les deux formats et si
+    oui ou non il s’agit d’un hypertree.
 
+    Si c'est un hypertree il affichera s'il existe une couverture
+    exacte pour cet hypertree .
+    (si la réponse est oui, la fonction affichera également la couverture).
+    """
     hypergraphDual = hypergraph.generateDualGraph()
     hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
     isHT = hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
-
+    # Tester si l'hypergraphe dual est α-acyclique
     if isHT :
         solution = cover_hypertree(hypergraph)
+        # Chercher s'il existe une couverture exacte pour l'hypergraphe
 
     hypergraphDual.show(isHT)
-    #hypergraphDual.showIncidenceGraph(isHT)
-    #hypergraphDual.showPrimalGraph(isHT)
+    # Interface graphique (GUI)
+
 
 def testPrint(graphe) :
     print("Vertices of graph :\n",graphe.getVertices())
-    print("Edges of graph :\n",graphe.getEdges())
+    print("\nEdges of graph :\n",graphe.getEdges())
     print("\nAdjacency Matrix :")
     printMatrix(graphe.getPrimalGraphMatrix())
     print("\nIncidence Matrix :")

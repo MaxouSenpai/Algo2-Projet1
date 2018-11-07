@@ -1,19 +1,20 @@
-import copy
-
+from copy import deepcopy
 
 def cover_hypertree(hypertree) :
-
+    """
+    Une fonction qui prend en paramètre un hypertree et affichera
+    si oui ou nous il existe une couverture exacte pour cet hypertree 
+    (si la réponse est oui, la fonction affichera également la couverture).
+    """
     matrix = modifyMat(hypertree.incidenceMatrixTranspose)
 
     solution = cover(matrix,[],[])
 
     if solution :
         print("\nThere is "+str(len(solution))+" exact cover for this hypertree : ")
-        print("\n".join([" ".join([str(solution[i][j]) for j in range(len(solution[i]))]) for i in range(len(solution))]))
+        print("\n".join( str(solution[i]) for i in range(len(solution))))
     else :
-        print("There is not an exact cover for this hypertree.")
-
-
+        print("\nThere is not an exact cover for this hypertree.")
 
 def cover(matrix,solution=[],allSolution = []) :
     """
@@ -30,13 +31,13 @@ def cover(matrix,solution=[],allSolution = []) :
     11 Fin
     """
 
-    mat = copy.deepcopy(matrix)
-    lineIteration , Rows = howMuch(mat)
+    mat = deepcopy(matrix)
+    column = find_column(mat)[0]
+    lineIteration , Rows = howMuch(mat,column)
 
     while lineIteration > 0 :
 
         row = Rows[len(Rows)-lineIteration]
-        column = find_column(mat)[0]
         columnslist = []
         rowslist = []
 
@@ -67,51 +68,46 @@ def cover(matrix,solution=[],allSolution = []) :
         if mat :
             if not find_column(mat)[1] :
                 lineIteration -= 1
-                if lineIteration :
-                    mat = copy.deepcopy(matrix)
+                mat = deepcopy(matrix)
             else :
                 cover(mat,solution,allSolution)
                 lineIteration -= 1
-                mat = copy.deepcopy(matrix)
+                mat = deepcopy(matrix)
 
         elif not mat :
             lineIteration -= 1
             print("Solution found : ",solution)
             if solution not in allSolution :
                 allSolution.append(solution[:])
-            mat = copy.deepcopy(matrix)
+            mat = deepcopy(matrix)
 
         solution.pop()
 
     return allSolution
 
-def howMuch(mat) :
-    column = find_column(mat)[0]
-    rows = []
-    iteration = 0
-
-    for row in range(1,len(mat)) :
-        if mat[row][column] == 1 :
-            rows.append(row)
-            iteration += 1
+def howMuch(mat,column) :
+    """
+    Renvoie une liste des lignes L telle que matrice[L][C] = 1
+    et la longueur de cette liste.
+    """
+    rows = [ row for row in range(1,len(mat)) if mat[row][column]]
+    iteration = len(rows)
 
     return iteration,rows
 
 def find_column(mat) :
-    min = len(mat)-1
-    column = 1
-    x = 0
-    for i in range(1,len(mat[0])) :
+    """
+    Renvoie l'indice de la première colonne C de la matrice
+    contenant un minimum de 1 et la valeur de ce minimum.
+    """
+    columnsSumList = [sum( row[i] for row in mat[1:]) for  i in range(1,len(mat[0]))]
+    minimumSum = min(columnsSumList)
+    columnIndex = columnsSumList.index(minimumSum) + 1
 
-        x = sum( row[i] for row in mat[1:])
-        if x <  min :
-            min = x
-            column = i
-
-    return column, min
+    return columnIndex, minimumSum
 
 def cutMatrix(matrix,rowslist,columnslist) :
-    mat = copy.deepcopy(matrix)
+    mat = deepcopy(matrix)
     printMatrix(mat)
 
     if rowslist :
@@ -139,7 +135,17 @@ def printMatrix(Matrix) :
         print("Matrix vide")
 
 def modifyMat(mat) :
-    matrix = copy.deepcopy(mat)
+    """
+    Transformer une matrice
+
+                    X  1 2 3
+        0 1 0       E1 0 1 0
+    du  1 0 1 vers  E2 1 0 1
+        1 1 0       E3 1 1 0
+
+
+    """
+    matrix = deepcopy(mat)
     newmat = [[i for i in range(len(matrix[0])+1)]]
     newmat[0][0] = "X "
 
