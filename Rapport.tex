@@ -4,6 +4,10 @@
 \usepackage{multirow}
 \usepackage{tocloft}
 \usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\floatname{algorithm}{Algorithme}
 
 \renewcommand{\contentsname}{Table des matières}
 \renewcommand{\tablename}{\Large Tableau}
@@ -44,16 +48,56 @@
     \end{center}
 \end{titlepage}
 
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{3}
 \tableofcontents
 \newpage
 \Large
 	
-\section{Introduction}
-	Yo
+\section{Introduction générale}
+Ce projet a pour but de mettre en pratique des concepts vus au cours d’algorithmique 2.
 
+\section{Sous-arbre de poids maximum}
+	\subsection{Introduction}
+		Le problème consiste à transformer un arbre $T=(V,E)$ en arbre ${T'}=({V'},{E'})$ de façon à maximiser la fonction
+		$$w({V'})=\sum_{v\in{V'}} w(v)$$
+
+	\subsection{Choix d'implémentation}
+	
+	\subsection{Algorithme}
+	
+	\begin{algorithm}
+	\caption{maxContribution}	
+	\begin{algorithmic}[1]
+	\REQUIRE liste $nodes\_to\_delete$
+
+	\STATE$poid\_total$ = node.weight
+	
+	\FOR{chaque $enfant$}
+	
+	\IF{maxContribution\_$enfant$ $<=$ 0}
+	\STATE if
+
+	\ELSE
+	\STATE else
+	\ENDIF
+
+
+	
+	\ENDFOR
+	
+	\end{algorithmic}
+	\end{algorithm}
+
+\section{Les hypergraphes et hypertrees}
+	Ciao
+	
+\section{Librairies utilisées}
+
+\subsection{Numpy}
+
+\subsection{Matplotlib}
 
 \section{Conclusion}
-	Ciao
+It's a conclusion
 
 \end{document}

@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from Tree import Tree
-#import HyperGraph
 
 def max_subtree(t):
     plt.figure("max_subtree",figsize=(20,10))
