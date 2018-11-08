@@ -1,12 +1,21 @@
 from random import choice
 import sys
 
-class Graph :
+class PrimalGraph :
+    """
+    Le graphe primal d’un hypergraphe est un graphe défini sur les
+    sommets de l’hypergraphe, avec des arêtes entre sommets contenus
+    dans la même hyper-arête .
+    """
     def __init__(self,V={},dicoV={}) :
         self.n = len(V)
+        # Nombre du sommets
         self.V = V
+        # Ensemble des sommets de l'hypergraphe
         self.dicoV = dicoV
+        # Dictionnaire contient les sommets comme clés et les sommets contenus dans la même hyper-arête
         self.E = self.getEdges()
+        # Les arêtes entre les sommets d'hypergraphe
 
     def getEdges(self) :
         lst = []
@@ -16,21 +25,80 @@ class Graph :
                     lst.append({Vertex,Vertex2})
         return lst
 
+    def find_cliques(self,P,R=set(),X=set(),cliques=[]) :
+        """
+        Renvoie toutes les cliques du graphe primal
+        s'il y en sinon une liste vide , une clique est
+        un sous-graphe induit complet .
+
+        R: = est l'ensemble des nœuds d'une clique maximale.
+        P: = est l'ensemble des nœuds possibles dans une clique maximale.
+        X: = est l'ensemble des nœuds exclus.
+        """
+
+        if not P and not X  :
+            if len(R) >= 2 and R not in cliques :
+                cliques.append(R)
+        else :
+            pivot = choice(list(P.union(X)))
+            for vertex in P.difference(self.dicoV[pivot]) :
+                newP = P.intersection(self.dicoV[vertex])
+                newR = R.union({vertex})
+                newX = X.intersection(self.dicoV[vertex])
+                self.find_cliques(newP,newR,newX,cliques)
+                P.difference({vertex})
+                X.union({vertex})
+        return cliques
+
+    def checkCliques(self,E) :
+        """
+        Renvoie True si toute clique maximale (au sens de l’inclusion)
+        de taille deux ou plus dans le graphe primale est une hyper-arête
+        dans l’hypergraphe H(V,E) sinon False .
+        """
+        cliques = self.find_cliques(self.V)
+        # Cliques maximales
+        print("Les cliques maximales du graphe :")
+        print("\n".join(str(cliques[i]) for i in range(len(cliques))))
+
+        check = True
+        E_values = [set(liste) for liste in E.values()]
+        # Liste contenant toutes les hyper-arêtes de l’hypergraphe
+
+        for clique in cliques :
+            check = clique in E_values
+            # Vérifier si la clique est une hyper-arête dans l’hypergraphe
+            if not check :
+                break
+
+        return check
+
     def subgraph(self,liste) :
+        """
+        Renvoie un sous-graphe induit , Un sous-graphe induit est un
+        sous-graphe en restreignant le graphe à un sous ensemble de sommets.
+        Formellement, H est un sous-graphe induit de G si, pour tout couple
+        ( x , y ) de sommets de H, x est connecté à y dans H si et seulement
+        si x est connecté à y dans G.
+        """
         newDico = {}
         for Vertex in self.dicoV :
             if Vertex in liste :
                 newDico[Vertex] = list(set(self.dicoV[Vertex]) & set(liste))
-        return Graph(set(liste),newDico)
+        return PrimalGraph(set(liste),newDico)
 
     def is_complete_graph(self) :
-
+        """
+        Renvoie True si le graphe est complet sinon False, un graphe complet
+        est un graphe simple dont tous les sommets sont adjacents, c'est-à-dire
+        que tout couple de sommets disjoints est relié par une arête.
+        """
         if self.n < 2:
             return True
-        e = len(self.E)
-        max_edges = ((self.n * (self.n - 1)) / 2)
-        return e == max_edges
+        graphEdges = len(self.E)
+        graphMaxEdges = ((self.n * (self.n - 1)) / 2)
 
+        return graphEdges == graphMaxEdges
 
     def max_cardinality_node(self, choices, wanna_connect):
         """Returns a the node in choices that has more connections in G

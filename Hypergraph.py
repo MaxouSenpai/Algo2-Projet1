@@ -1,5 +1,5 @@
 from random import random,randint,choice
-from Graph import Graph
+from PrimalGraph import PrimalGraph
 from cover_hypertree import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,6 +65,20 @@ class Hypergraph :
 
         return Matrix
 
+    def primalGraph_OfaHypergraph(self) :
+
+        return PrimalGraph(self.V,self.dicoV)
+
+
+    def is_alphaAcyclique(self,primalGraph) :
+        """
+        Un hypergraphe est α-acyclique si son graphe primal est cordal et
+        que toute clique maximale (au sens de l’inclusion) de taille deux
+        ou plus dans le graphe primale est une hyper-arête dans l’hypergraphe.
+        """
+        return primalGraph.checkCliques(self.E) and primalGraph.is_chordal()
+
+
     def getIncidenceGraphMatrix(self) :
 
         IncidenceMatrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
@@ -107,48 +121,6 @@ class Hypergraph :
                     E[hyperedge].append(Vertex)
 
         return Hypergraph(V,E)
-
-    def find_cliques(self,P,R=set(),X=set(),cliques=[]) :
-        """
-        R := is the set of nodes of a maximal clique.
-        P := is the set of possible nodes in a maximal clique.
-        X := is the set of nodes that are excluded.
-        """
-
-        if not P and not X  :
-            if len(R) >= 2 and R not in cliques :
-                cliques.append(R)
-        else :
-            pivot = choice(list(P.union(X)))
-            for vertex in P.difference(self.dicoV[pivot]) :
-                newP = P.intersection(self.dicoV[vertex])
-                newR = R.union({vertex})
-                newX = X.intersection(self.dicoV[vertex])
-                self.find_cliques(newP,newR,newX,cliques)
-                P.difference({vertex})
-                X.union({vertex})
-        return cliques
-
-    def checkCliques(self) :
-        """
-        Renvoie True si toute clique maximale (au sens de l’inclusion)
-        de taille deux ou plus dans le graphe primale est une hyper-arête
-        dans l’hypergraphe H(V,E) sinon False .
-        """
-        cliques = self.find_cliques(self.V)
-        # Cliques maximales
-        print("Les cliques maximales du graphe :")
-        print("\n".join(str(cliques[i]) for i in range(len(cliques))))
-
-        check = True
-        E_values = [set(liste) for liste in self.E.values()]
-
-        for clique in cliques :
-            check = clique in E_values
-            if not check :
-                break
-
-        return check
 
     def stringDigit(self,word) :
 
@@ -236,7 +208,7 @@ def random_graph_generator():
     raisonnable (maximum 15 sommets et hyper-arêtes) .
     """
     n = randint(1,15)
-    # Nombre du sommet
+    # Nombre du sommets
     V = set("v" + str(i) for i in range(1,n+1))
 
     max_hyperedge = 2**n - 1
@@ -275,8 +247,7 @@ def test_hypertree(hypergraph) :
     (si la réponse est oui, la fonction affichera également la couverture).
     """
     hypergraphDual = hypergraph.generateDualGraph()
-    hypergraphDual_Primal = Graph(hypergraphDual.V,hypergraphDual.dicoV)
-    isHT = hypergraphDual.checkCliques() and hypergraphDual_Primal.is_chordal()
+    isHT = hypergraphDual.is_alphaAcyclique(hypergraphDual.primalGraph_OfaHypergraph())
     # Tester si l'hypergraphe dual est α-acyclique
     if isHT :
         solution = cover_hypertree(hypergraph)
