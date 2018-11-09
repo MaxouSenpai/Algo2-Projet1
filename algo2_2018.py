@@ -7,24 +7,18 @@ from cover_hypertree import *
 
 def max_subtree(t):
     """
-    Une fonction qui prend en paramètre un arbre enraciné en r
+    Fonction qui prend en paramètre un arbre enraciné en r
     dont les sommets sont pondérés et affichera à l’écran les sommets qui constituent
     un sous-arbre enraciné en r de poids maximum.
     Les noeuds qui constituent le sous-arbre de poids maximum seront colorés en rouge
     et les autres seront colorés en gris.
     """
     nodes_to_desactivate = []
-
-    if t.maxContribution(nodes_to_desactivate) > 0:
-        # S'il existe un sous-arbre de poids positif contenant r
-        t.show(nodes_to_desactivate)
-
-    else:
-        plt.text(0.5,0.5,"Il n’existe pas de sous-arbre de poids positif contenant r",horizontalalignment="center",verticalalignment="center",fontsize=20)
+    t.show(nodes_to_desactivate,True if t.maxContribution(nodes_to_desactivate) > 0 else False)
 
 def test_hypertree(hypergraph) :
     """
-    Une fonction qui prend en paramètre un hypergraphe, affichera
+    Fonction qui prend en paramètre un hypergraphe, affichera
     à l'écran son hypergraphe dual sous les deux formats et si
     oui ou non il s’agit d’un hypertree.
 
@@ -33,7 +27,7 @@ def test_hypertree(hypergraph) :
     (si la réponse est oui, la fonction affichera également la couverture).
     """
     hypergraphDual = hypergraph.generateDualGraph()
-    isHT = hypergraphDual.is_alphaAcyclique(hypergraphDual.primalGraph_OfaHypergraph())
+    isHT = hypergraphDual.is_alphaAcyclique()
     # Tester si l'hypergraphe dual est α-acyclique
     if isHT :
         solution = cover_hypertree(hypergraph)
@@ -72,7 +66,7 @@ def random_tree_generator(max_nodes=20):
 
 def random_graph_generator():
     """
-    Une fonction qui génère aléatoirement un hypergraphe de taille
+    Fonction qui génère aléatoirement un hypergraphe de taille
     raisonnable (maximum 15 sommets et hyper-arêtes) .
     """
     n = randint(1,16)
@@ -92,7 +86,7 @@ def random_graph_generator():
         row = [ 0 if random() < 0.5 else 1 for j in range(n)]
         # Génère une hyper-arête
         if row not in MatrixTranspose :
-            # Vérifier qu'il existe par la même hyper-arête deux fois
+            # Vérifier qu'il n'existe pas la même hyper-arête deux fois
             MatrixTranspose.append(row)
             i += 1
 
@@ -105,9 +99,9 @@ def random_graph_generator():
     return Hypergraph(V,E,incidenceMatrix)
 
 def main():
-
     max_subtree(random_tree_generator())
     test_hypertree(random_graph_generator())
     plt.show()
 
-main()
+if __name__ == "__main__":
+    main()

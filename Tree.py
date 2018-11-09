@@ -1,11 +1,9 @@
 import matplotlib.pyplot as plt
 
 class Tree:
-    """Classe Arbre"""
-
     def __init__(self,data):
         """
-        Premet d'initialiser l'arbre
+        Initialise l'arbre
 
         Prend en paramètre :
             data : Les données brutes de l'arbre.
@@ -42,13 +40,32 @@ class Tree:
                 res += temp
         return res
 
-    def show(self,nodes_to_desactivate=[]):
+    def show(self,nodes_to_desactivate=[],sub_tree_exist=True):
+        """
+        Permet de lancer l'affichage de l'arbre
+
+        Prend en paramètre :
+            nodes_to_desactivate : La liste du nom des noeuds à désactiver
+            sub_tree_exist : L'existence du sous-arbre
+
+        """
         plt.figure("Arbre",figsize=(20,10))
         ax = plt.axes()
         ax.set_aspect("equal")
         plt.axis([-1.25,2.25,-0.5,1.2])
         plt.axis('off')
-        self.make_show(ax,nodes_to_desactivate)
+
+        self.make_show(ax,nodes_to_desactivate,True if sub_tree_exist else False)
+
+        plt.text(-1,1.2,"Activé",horizontalalignment="center",verticalalignment="center",fontsize=15)
+        plt.text(-1,1.1,"Nom\nPoid",horizontalalignment="center",verticalalignment="center",fontsize=13)
+        ax.add_artist(plt.Circle((-1, 1.1), 0.075, color="red",clip_on=False))
+
+        plt.text(2,1.2,"Désactivé",horizontalalignment="center",verticalalignment="center",fontsize=15)
+        plt.text(2,1.1,"Nom\nPoid",horizontalalignment="center",verticalalignment="center",fontsize=13)
+        ax.add_artist(plt.Circle((2, 1.1), 0.075, color="silver",clip_on=False))
+
+
 
     def make_show(self,ax,nodes_to_desactivate,current_state=True,x=0.5,y=1,space=0.25,width=3):
         """
