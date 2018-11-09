@@ -1,42 +1,113 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from numpy.random import random,randint,choice
 from Tree import Tree
+from Hypergraph import Hypergraph
+from cover_hypertree import *
 
 def max_subtree(t):
-    plt.figure("max_subtree",figsize=(20,10))
-    ax = plt.axes()
-    ax.set_aspect("equal")
-    plt.axis([-1.25,2.25,-0.5,1.2])
-    plt.axis('off')
+    """
+    Une fonction qui prend en paramètre un arbre enraciné en r
+    dont les sommets sont pondérés et affichera à l’écran les sommets qui constituent
+    un sous-arbre enraciné en r de poids maximum.
+    Les noeuds qui constituent le sous-arbre de poids maximum seront colorés en rouge
+    et les autres seront colorés en gris.
+    """
     nodes_to_desactivate = []
 
     if t.maxContribution(nodes_to_desactivate) > 0:
-        t.show(ax,nodes_to_desactivate)
+        # S'il existe un sous-arbre de poids positif contenant r
+        t.show(nodes_to_desactivate)
 
     else:
         plt.text(0.5,0.5,"Il n’existe pas de sous-arbre de poids positif contenant r",horizontalalignment="center",verticalalignment="center",fontsize=20)
-    plt.show()
 
-def randomTree(max_nodes=15):
+def test_hypertree(hypergraph) :
+    """
+    Une fonction qui prend en paramètre un hypergraphe, affichera
+    à l'écran son hypergraphe dual sous les deux formats et si
+    oui ou non il s’agit d’un hypertree.
+
+    Si c'est un hypertree il affichera s'il existe une couverture
+    exacte pour cet hypertree .
+    (si la réponse est oui, la fonction affichera également la couverture).
+    """
+    hypergraphDual = hypergraph.generateDualGraph()
+    isHT = hypergraphDual.is_alphaAcyclique(hypergraphDual.primalGraph_OfaHypergraph())
+    # Tester si l'hypergraphe dual est α-acyclique
+    if isHT :
+        solution = cover_hypertree(hypergraph)
+        # Chercher s'il existe une couverture exacte pour l'hypergraphe
+
+    hypergraphDual.show(isHT)
+    # Interface graphique (GUI)
+
+def random_tree_generator(max_nodes=20):
     res = ['r',np.random.randint(-100,100),[]]
-    random_array = list(np.random.randint(-100,100,max_nodes-1))
-    makeRandomTree(random_array,res,65)
+    random_array = list(np.random.randint(-100,100,np.random.randint(0,max_nodes)))
+    letter = 65
+
+    for node in random_array:
+        temp_node = [chr(letter),node,[]]
+        letter += 1
+        placed = False
+        temp_dir = res[2]
+
+        while not placed:
+            if len(temp_dir) == 0:
+                temp_dir.append(temp_node)
+                placed = True
+
+            else:
+                choice = np.random.randint(0,2) # 0 : new child , 1 : new_dir
+
+                if choice == 0:
+                    temp_dir.insert(np.random.randint(0,len(temp_dir)),temp_node)
+                    placed = True
+
+                else:
+                    temp_dir = temp_dir[np.random.randint(0,len(temp_dir))][2]
+
     return Tree(res)
 
-def makeRandomTree(random_array,temp,letter):
-    nb_of_children = np.random.randint(0,len(random_array)//2)
+def random_graph_generator():
+    """
+    Une fonction qui génère aléatoirement un hypergraphe de taille
+    raisonnable (maximum 15 sommets et hyper-arêtes) .
+    """
+    n = randint(1,16)
+    # Nombre du sommets
+    V = set("v" + str(i) for i in range(1,n+1))
 
-    for i in range(nb_of_children):
-        temp[2].append([chr(letter),random_array.pop(0),[]])
-        letter+=1
+    max_hyperedge = 2**n - 1
+    # Maximum d'hyper-arêtes qu'on peut obtenir avec n sommets
+    m = randint(1,16)
+    # Nombre d'hyper-arêtes
+    while m > max_hyperedge :
+        m = randint(1,16)
 
-    for i in range(nb_of_children):
-        letter = makeRandomTree(random_array,temp[2][i],letter)
+    MatrixTranspose = []
+    i = 0
+    while i < m :
+        row = [ 0 if random() < 0.5 else 1 for j in range(n)]
+        # Génère une hyper-arête
+        if row not in MatrixTranspose :
+            # Vérifier qu'il existe par la même hyper-arête deux fois
+            MatrixTranspose.append(row)
+            i += 1
 
-    return letter
+    n = len(MatrixTranspose[0])
+
+    incidenceMatrix = [[row[i] for row in MatrixTranspose] for i in range(n)]
+
+    E = {"E" + str(j+1):["v" + str(i+1) for i in range(n) if incidenceMatrix[i][j]] for j in range(m) }
+
+    return Hypergraph(V,E,incidenceMatrix)
 
 def main():
 
-    max_subtree(randomTree())
+    max_subtree(random_tree_generator())
+    test_hypertree(random_graph_generator())
+    plt.show()
 
 main()

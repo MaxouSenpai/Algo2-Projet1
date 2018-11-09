@@ -42,7 +42,15 @@ class Tree:
                 res += temp
         return res
 
-    def show(self,ax,nodes_to_desactivate=[],current_state=True,x=0.5,y=1,space=0.25,width=3):
+    def show(self,nodes_to_desactivate=[]):
+        plt.figure("Arbre",figsize=(20,10))
+        ax = plt.axes()
+        ax.set_aspect("equal")
+        plt.axis([-1.25,2.25,-0.5,1.2])
+        plt.axis('off')
+        self.make_show(ax,nodes_to_desactivate)
+
+    def make_show(self,ax,nodes_to_desactivate,current_state=True,x=0.5,y=1,space=0.25,width=3):
         """
         Permet d'afficher l'arbre :
             Les noeuds activés en rouge
@@ -62,7 +70,7 @@ class Tree:
         # Si son père est désactivé alors lui aussi est désactivé
 
         ax.add_artist(plt.Circle((x, y), 0.075, color="red" if current_state else "silver",clip_on=False))
-        plt.text(x,y,str(self.name)+'\n'+str(self.weight),horizontalalignment="center",verticalalignment="center",fontsize=20)
+        plt.text(x,y,str(self.name)+'\n'+str(self.weight),horizontalalignment="center",verticalalignment="center",fontsize=13)
 
         if len(self.children) > 0: # Prevent division by 0
             dx = width/len(self.children)
@@ -71,4 +79,4 @@ class Tree:
             for child in self.children:
                 nx += dx
                 ax.arrow(x, y-0.075, nx-x, 0.15+y-space-y,head_width=0.05, head_length=0.05,fc="k", ec="k",length_includes_head=True,clip_on=False)
-                child.show(ax,nodes_to_desactivate,current_state,nx,y-space,space,dx+0.075)
+                child.make_show(ax,nodes_to_desactivate,current_state,nx,y-space,space,dx+0.075)

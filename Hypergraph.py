@@ -1,4 +1,3 @@
-from random import random,randint,choice
 from PrimalGraph import PrimalGraph
 from cover_hypertree import *
 import matplotlib.pyplot as plt
@@ -136,7 +135,6 @@ class Hypergraph :
 
         self.showPrimalGraph(ax,-0.6)
         self.showIncidenceGraph(ax,0.6)
-        plt.show()
 
     def showIncidenceGraph(self,ax,dx):
         plt.text(0.5+dx,1.15,"Incidence graph of a dual hypergraph" ,horizontalalignment="center",verticalalignment="center",fontsize=20,color="black")
@@ -202,61 +200,6 @@ class Hypergraph :
                             ax.add_line(line)
 
 
-def random_graph_generator():
-    """
-    Une fonction qui génère aléatoirement un hypergraphe de taille
-    raisonnable (maximum 15 sommets et hyper-arêtes) .
-    """
-    n = randint(1,15)
-    # Nombre du sommets
-    V = set("v" + str(i) for i in range(1,n+1))
-
-    max_hyperedge = 2**n - 1
-    # Maximum d'hyper-arêtes qu'on peut obtenir avec n sommets
-    m = randint(1,15)
-    # Nombre d'hyper-arêtes
-    while m > max_hyperedge :
-        m = randint(1,15)
-
-    MatrixTranspose = []
-    i = 0
-    while i < m :
-        row = [ 0 if random() < 0.5 else 1 for j in range(n)]
-        # Génère une hyper-arête
-        if row not in MatrixTranspose :
-            # Vérifier qu'il existe par la même hyper-arête deux fois
-            MatrixTranspose.append(row)
-            i += 1
-
-    n = len(MatrixTranspose[0])
-
-    incidenceMatrix = [[row[i] for row in MatrixTranspose] for i in range(n)]
-
-    E = {"E" + str(j+1):["v" + str(i+1) for i in range(n) if incidenceMatrix[i][j]] for j in range(m) }
-
-    return Hypergraph(V,E,incidenceMatrix)
-
-def test_hypertree(hypergraph) :
-    """
-    Une fonction qui prend en paramètre un hypergraphe affichera
-    à l'écran son hypergraphe dual sous les deux formats et si
-    oui ou non il s’agit d’un hypertree.
-
-    Si c'est un hypertree il affichera s'il existe une couverture
-    exacte pour cet hypertree .
-    (si la réponse est oui, la fonction affichera également la couverture).
-    """
-    hypergraphDual = hypergraph.generateDualGraph()
-    isHT = hypergraphDual.is_alphaAcyclique(hypergraphDual.primalGraph_OfaHypergraph())
-    # Tester si l'hypergraphe dual est α-acyclique
-    if isHT :
-        solution = cover_hypertree(hypergraph)
-        # Chercher s'il existe une couverture exacte pour l'hypergraphe
-
-    hypergraphDual.show(isHT)
-    # Interface graphique (GUI)
-
-
 def testPrint(graphe) :
     print("Vertices of graph :\n",graphe.getVertices())
     print("\nEdges of graph :\n",graphe.getEdges())
@@ -267,10 +210,11 @@ def testPrint(graphe) :
     print("\nIncidence Matrix Transpose")
     printMatrix(graphe.incidenceMatrixTranspose)
     print("\n\n\n")
-
+"""
 graphe = random_graph_generator()
 testPrint(graphe)
 grapheDual = graphe.generateDualGraph()
 testPrint(grapheDual)
 
 test_hypertree(graphe)
+"""
