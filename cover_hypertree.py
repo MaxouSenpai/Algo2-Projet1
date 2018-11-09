@@ -30,7 +30,7 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
     column = findMinColumn(mat)[0]
     # La première colonne C (column) contenant un minimum de 1
     lineIteration , Rows = findRows(mat,column)
-    # Un compteur des lignes et liste des lignes trouvées
+    # Un compteur des lignes et une liste des lignes trouvées
 
     while lineIteration > 0 :
 
@@ -59,12 +59,12 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
                         # Pour chaque ligne I (line) telle que matrice[I][J] = 1
                         if line not in rowslist  :
                             rowslist.append(line)
-                            # Ajouter la ligne I de la matrice
+                            # Ajoute la ligne I de la matrice
                 columnslist.append(colonne)
-                # Ajouter la colonne J de la matrice
+                # Ajoute la colonne J de la matrice
 
         mat = cutMatrix(mat,rowslist,columnslist)
-        # Supprimer les colonnes et les lignes de la matrice
+        # Supprime les colonnes et les lignes de la matrice
 
         if mat :
             # La matrice n'est pas vide, on n'est donc pas arrivé à une solution.
@@ -75,8 +75,8 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
 
             # Else
             # La première colonne avec un minimum de 1 est la colonne qui n'en contient aucun .
-            # Comme il n'y a pas de 1, on ne peut plus réduire la matrice,et cette branche
-            # de l'algorithme échoue.
+            # Comme il n'y a pas de 1, on ne peut donc plus réduire la matrice et
+            # cette branche de l'algorithme échoue.
 
         elif not mat :
             # Il ne reste qu'une matrice vide
@@ -88,7 +88,7 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
         solution.pop()
         # On supprime la ligne L de la solution partielle
         lineIteration -= 1
-        # Décrémenter le compteur des lignes
+        # Décrémente le compteur des lignes
         mat = deepcopy(matrix)
         # Reprendre sur la matrice d'avant pour la ligne suivante
 
@@ -120,20 +120,20 @@ def findMinColumn(mat) :
 
 def cutMatrix(matrix,rowslist,columnslist) :
     """
-    Renvoie une nouvelle matrice en coupant les listes et les colonnes
-    dans les deux listes.
+    Renvoie une nouvelle matrice en enlevant les lignes et les colonnes
+    contenu dans rowlist et columnslist
     """
     mat = deepcopy(matrix)
     printMatrix(mat)
 
     if rowslist :
-        # Supprimer les lignes de la matrice
+        # Supprime les lignes de la matrice
         print("Cut rows :"," ".join([mat[i][0] for i in rowslist]))
         mat = [ mat[i] for i in range(len(mat)) if i not in rowslist]
         printMatrix(mat)
 
     if columnslist :
-        # Supprimer les colonnes de la matrice
+        # Supprime les colonnes de la matrice
         print("Cut columns :"," ".join([str(i) for i in columnslist]))
         newmat = []
         for row in mat :
@@ -146,24 +146,23 @@ def cutMatrix(matrix,rowslist,columnslist) :
 
 def printMatrix(Matrix) :
     """
-    Fonction pour afficher la matrice .
+    Affiche la matrice .
     """
     if Matrix :
         n = len(Matrix)
         m = len(Matrix[0])
         print("\n".join([" ".join([str(Matrix[i][j]) for j in range(m)]) for i in range(n)]))
     else :
-        print("Matrix vide")
+        print("Matrice vide")
 
 def modifyMat(mat) :
     """
-    Transformer une matrice
+    Transforme une matrice
 
-                    X  1 2 3
-        0 1 0       E1 0 1 0
-    du  1 0 1 vers  E2 1 0 1
-        1 1 0       E3 1 1 0
-
+                  X  1 2 3
+    0 1 0         E1 0 1 0
+    1 0 1   vers  E2 1 0 1
+    1 1 0         E3 1 1 0
 
     """
     matrix = deepcopy(mat)
