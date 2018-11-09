@@ -9,7 +9,7 @@ class Tree:
 
         Prend en paramètre :
             data : Les données brutes de l'arbre.
-                Paterne : [name,weight,children]
+                Modèle : [name,weight,children]
                 où children = [[name_1,weight_1,children_1],...,[name_n,weight_n,children_n]]
         """
 
@@ -25,7 +25,7 @@ class Tree:
         Permet d'ajouter à la liste "state" les noeuds à désactiver
 
         Prend en paramètre :
-            state : Liste des noeuds à désactiver
+            nodes_to_desactivate : Liste des noeuds à désactiver
 
         Retourne :
             res : La contribution max du noeud courrant
@@ -36,7 +36,7 @@ class Tree:
         for child in self.children:
             temp = child.maxContribution(nodes_to_desactivate)
             if temp <= 0:
-                # Si la contribution du fils courrant est nulle où négative on ajoute le fils à la liste "state"
+                # Si la contribution du fils courrant est nulle où négative on ajoute le fils à la liste "nodes_to_desactivate"
                 nodes_to_desactivate.append(child.name)
             else:
                 res += temp

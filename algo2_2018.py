@@ -8,10 +8,10 @@ def max_subtree(t):
     ax.set_aspect("equal")
     plt.axis([-1.25,2.25,-0.5,1.2])
     plt.axis('off')
-    state = []
+    nodes_to_desactivate = []
 
-    if t.maxContribution(state) > 0:
-        t.show(ax,state)
+    if t.maxContribution(nodes_to_desactivate) > 0:
+        t.show(ax,nodes_to_desactivate)
 
     else:
         plt.text(0.5,0.5,"Il n’existe pas de sous-arbre de poids positif contenant r",horizontalalignment="center",verticalalignment="center",fontsize=20)

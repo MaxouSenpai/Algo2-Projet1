@@ -7,6 +7,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
+
 \floatname{algorithm}{Algorithme}
 
 \renewcommand{\contentsname}{Table des matières}
@@ -54,50 +55,70 @@
 \Large
 	
 \section{Introduction générale}
-Ce projet a pour but de mettre en pratique des concepts vus au cours d’algorithmique 2.
+Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au cours d’algorithmique 2 pour une meilleure compréhension et maîtrise de ceux-ci.
 
 \section{Sous-arbre de poids maximum}
 	\subsection{Introduction}
-		Le problème consiste à transformer un arbre $T=(V,E)$ en arbre ${T'}=({V'},{E'})$ de façon à maximiser la fonction
+		Dans ce problème nous manipulons des arbres constitués de noeuds ayant un poid. Le problème consiste à transformer un arbre $T=(V,E)$ en arbre ${T'}=({V'},{E'})$ de façon à maximiser la fonction
 		$$w({V'})=\sum_{v\in{V'}} w(v)$$
 
 	\subsection{Choix d'implémentation}
+
+	Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les noeuds à désactiver, pour qu'à l'affichage on puisse voir l'arbre de départ avec les noeuds activés (en rouge) ainsi que ceux désactivés (en gris).
+	
 	
 	\subsection{Algorithme}
-	
-	\begin{algorithm}
-	\caption{maxContribution}	
+	\begin{algorithm}[H]
+	\caption{maxContribution}
 	\begin{algorithmic}[1]
-	\REQUIRE liste $nodes\_to\_delete$
+	\REQUIRE liste noeuds\_à\_desactiver
 
-	\STATE$poid\_total$ = node.weight
+	\STATE poid\_total = noeud.poid
 	
-	\FOR{chaque $enfant$}
+	\FOR{chaque enfant du noeud}
 	
-	\IF{maxContribution\_$enfant$ $<=$ 0}
-	\STATE if
+	\IF{enfant.maxContribution()$<=$ 0}
+	\STATE ajout enfant à noeuds\_à\_desactiver
 
 	\ELSE
-	\STATE else
-	\ENDIF
-
-
+	\STATE ajout enfant.maxContribution() à poid\_total
 	
+	\ENDIF	
 	\ENDFOR
-	
+
+	\RETURN poid\_total
+
 	\end{algorithmic}
 	\end{algorithm}
+	
+	La complexité de cet algorithme est de $0(n)$ car il parcourt chaque noeud de l'arbre, $O(n)$ et toutes les opérations faites sur chaque noeud sont en $O(1)$. Donc la complexité finale est de $O(n)$.
+		
+	\subsection{Arbres aléatoires}
+	Chaque noeud peut avoir entre 0 et n//2 fils, où n = nombre de poids encore disponible. Cela permet d'avoir des arbres aléatoires assez intéressants afin de pouvoir au mieux visualiser le problème du sous-arbre de poids maximum.
 
 \section{Les hypergraphes et hypertrees}
-	Ciao
+
+	
+	\subsection{Introduction}
+	
+	\subsection{Choix d'implémentation}
+	
+	\subsection{Algorithmes}
+	
+	\subsection{Hypergraphes aléatoires}
 	
 \section{Librairies utilisées}
 
 \subsection{Numpy}
+	C'est une librairie très utile dans la manipulation de tableaux comme des matrices, des vecteurs, etc ainsi que dans l'utilisation d'opérations mathématiques tel que les fonctions sinus/cosinus, etc.
 
 \subsection{Matplotlib}
+	C'est une librairie assez utile dans l'affichage d'objet mathématique en 2D tel que des cercles, des lignes, des graphiques, etc.
+	
+\subsection{Random}
+	C'est une librairie permettant de facilement ajouter de l'aléatoire dans un code python.
 
 \section{Conclusion}
-It's a conclusion
+	What do you even wanna say? (Group project?)
 
 \end{document}
