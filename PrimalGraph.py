@@ -134,22 +134,26 @@ class PrimalGraph :
         return graphEdges == graphMaxEdges
 
     def max_cardinality_node(self, choices, wanna_connect):
-        """Returns a the node in choices that has more connections in G
-        to nodes in wanna_connect.
         """
-        #    max_number = None
-        max_number = -1
-        for x in choices:
-            number = len([y for y in self.dicoV[x] if y in wanna_connect])
-            if number > max_number:
-                max_number = number
-                max_cardinality_node = x
-        return max_cardinality_node
+        Retourne un sommet dans les choix qui a plus de connexions en G
+        aux sommets dans wanna_connect.
+        """
+
+        maxConnections = -1
+        for choice in choices:
+            connections = len([Vertex for Vertex in self.dicoV[choice] if Vertex in wanna_connect])
+
+            if connections > maxConnections:
+                maxConnections = connexions
+                maxCardinalityNode = choice
+
+        return maxCardinalityNode
 
     def is_chordal(self, s=None, treewidth_bound=sys.maxsize):
-        """ Given a graph G, starts a max cardinality search
-        (starting from s if s is given and from an arbitrary node otherwise)
-        trying to find a non-chordal cycle.
+        """
+        Étant donné un graphe G, lance une recherche de cardinalité maximale
+        (en partant de s si s est donné et à partir d'un noeud arbitraire sinon)
+        en essayant de trouver un cycle non-chordal.
         """
 
         unnumbered = set(self.V)
