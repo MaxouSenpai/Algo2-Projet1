@@ -174,8 +174,6 @@ class PrimalGraph :
         numbered = set([s])
         # Ajout le sommet choisi à l'ensemble des sommets numéroté
 
-        current_treewidth = -1
-
         while unnumbered:
 
             Vertex = self.max_cardinality_node(unnumbered, numbered)
