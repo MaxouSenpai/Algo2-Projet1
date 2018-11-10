@@ -179,7 +179,7 @@ class PrimalGraph :
         while unnumbered:
 
             Vertex = self.max_cardinality_node(unnumbered, numbered)
-            # Sommet qui a plus de connexions aux sommets dans wanna_connect
+            # Sommet qui a plus de connexions aux sommets dans numbered
             unnumbered.remove(Vertex)
             # Supprime le sommet qui a plus de connexions de l'ensemble non numéroté
             numbered.add(Vertex)
