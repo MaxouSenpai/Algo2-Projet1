@@ -1,4 +1,4 @@
-from random import choice
+from numpy.random import choice
 import sys
 
 class PrimalGraph :
@@ -7,12 +7,12 @@ class PrimalGraph :
     sommets de l’hypergraphe, avec des arêtes entre sommets contenus
     dans la même hyper-arête .
     """
-    def __init__(self,V={},dicoV={}) :
+    def __init__(self,V=set(),dicoV={}) :
         """
         Initialise le graphe primal
 
         Prend en paramètre :
-            V : Ensemble des sommets de l'hypergraphe
+            V : Ensemble des sommets du graphe primal
             dicoV : Dictionnaire contenant les sommets comme clés et comme valeurs les sommets contenus dans la même hyper-arête
         """
         self.n = len(V)
@@ -20,7 +20,7 @@ class PrimalGraph :
         self.V = V
         self.dicoV = dicoV
         self.E = self.getEdges()
-        # Les arêtes entre les sommets de l'hypergraphe
+        # Les arêtes entre les sommets du graphe primal
 
     def getEdges(self) :
         """
@@ -88,8 +88,11 @@ class PrimalGraph :
         """
         cliques = self.find_cliques(self.V)
         # Cliques maximales
-        print("Les cliques maximales du graphe :")
-        print("\n".join(str(cliques[i]) for i in range(len(cliques))))
+        if cliques :
+            print("Les cliques maximales du graphe primal :")
+            print("\n".join(str(cliques[i]) for i in range(len(cliques))))
+        else :
+            print("Pas de cliques maximales")
 
         check = True
         E_values = [set(liste) for liste in E.values()]
@@ -126,57 +129,73 @@ class PrimalGraph :
         #Un graphe complet
         #est un graphe simple dont tous les sommets sont adjacents, c'est-à-dire
         #que tout couple de sommets disjoints est relié par une arête.
+
         if self.n < 2:
             return True
         graphEdges = len(self.E)
+        # Nombre des arêtes du graphe primal
         graphMaxEdges = ((self.n * (self.n - 1)) / 2)
+        # Nombre maximal des arêtes qu'un graphe primal peut avoir
 
         return graphEdges == graphMaxEdges
 
     def max_cardinality_node(self, choices, wanna_connect):
-        """Returns a the node in choices that has more connections in G
-        to nodes in wanna_connect.
         """
-        #    max_number = None
-        max_number = -1
-        for x in choices:
-            number = len([y for y in self.dicoV[x] if y in wanna_connect])
-            if number > max_number:
-                max_number = number
-                max_cardinality_node = x
-        return max_cardinality_node
+        Retourne un sommet dans les choix qui a plus de connexions
+        en graphe aux sommets dans wanna_connect.
+        """
+
+        maxConnections = -1
+        # Nombre de connexions maximales
+        for choice in choices:
+            # Choisir un sommet dans les choix
+            connections = len([Vertex for Vertex in self.dicoV[choice] if Vertex in wanna_connect])
+            # Nombre de connexions du sommet choisi aux sommets dans wanna_connect
+            if connections > maxConnections:
+                maxConnections = connections
+                maxCardinalityNode = choice
+                # Sommet qui a plus de connexions
+
+        return maxCardinalityNode
 
     def is_chordal(self, s=None, treewidth_bound=sys.maxsize):
-        """ Given a graph G, starts a max cardinality search
-        (starting from s if s is given and from an arbitrary node otherwise)
-        trying to find a non-chordal cycle.
+        """
+        Étant donné l'ensemble des sommets du graphe primal,lance une recherche
+        de cardinalité maximale (en partant de s si s est donné sinon à partir
+        d'un sommet arbitraire) en essayant de trouver un cycle non-chordal.
         """
 
         unnumbered = set(self.V)
-        if s is None:
-            s = choice(list(self.V))
+        # Ensemble des sommets non numéroté
+        s = choice(list(self.V)) if s is None else s
+        # Choisi un sommet arbitraire s'il y a pas de sommet (s)
 
         unnumbered.remove(s)
+        # Supprime le sommet choisi de l'ensemble non numéroté
         numbered = set([s])
-        #    current_treewidth = None
+        # Ajout le sommet choisi à l'ensemble des sommets numéroté
+
         current_treewidth = -1
 
-        while unnumbered:  # and current_treewidth <= treewidth_bound:
+        while unnumbered:
 
-            v = self.max_cardinality_node(unnumbered, numbered)
-
-            unnumbered.remove(v)
-            numbered.add(v)
-
-            clique_wanna_be = set(self.dicoV[v]) & numbered
+            Vertex = self.max_cardinality_node(unnumbered, numbered)
+            # Sommet qui a plus de connexions aux sommets dans wanna_connect
+            unnumbered.remove(Vertex)
+            # Supprime le sommet qui a plus de connexions de l'ensemble non numéroté
+            numbered.add(Vertex)
+            # Ajout le sommet qui a plus de connexions à l'ensemble des sommets numéroté
+            clique_wanna_be = set(self.dicoV[Vertex]) & numbered
+            #
             subGraph = self.subgraph(list(clique_wanna_be))
+            # Un sous-graphe induit des sommets appartenant à clique_wanna_be
 
             if subGraph.is_complete_graph():
-                # The graph seems to be chordal by now. We update the treewidth
+                # Le graphe semble être chordal maintenant. Nous mettons à jour la largeur de l'arbre
                 current_treewidth = max(current_treewidth, len(clique_wanna_be))
                 if current_treewidth > treewidth_bound:
                     raise TypeError
             else:
-                # sg is not a clique,
+                # Le sous-graphe n'est pas une clique
                 return False
         return True
