@@ -12,7 +12,8 @@ class PrimalGraph :
 
         Prend en paramètre :
             V : Ensemble des sommets du graphe primal
-            dicoV : Dictionnaire contenant les sommets comme clés et comme valeurs les sommets contenus dans la même hyper-arête
+            dicoV : Dictionnaire contenant les sommets comme clés et comme
+                    valeurs les sommets contenus dans la même hyper-arête
         """
         self.n = len(V)
         # Nombre de sommets
@@ -179,11 +180,13 @@ class PrimalGraph :
             Vertex = self.max_cardinality_node(unnumbered, numbered)
             # Sommet qui a plus de connexions aux sommets dans numbered
             unnumbered.remove(Vertex)
-            # Supprime le sommet qui a plus de connexions de l'ensemble non numéroté
+            # Supprime le sommet qui a plus de connexions dans
+            # l'ensemble des sommets non numérotés
             numbered.add(Vertex)
-            # Ajout le sommet qui a plus de connexions à l'ensemble des sommets numéroté
+            # Ajout le sommet qui a plus de connexions à l'ensemble des sommets numérotés
             clique_wanna_be = set(self.dicoV[Vertex]) & numbered
-            #
+            # Intersection de l'ensemble des sommets liée au sommet "Vertex"
+            # et l'ensemble des sommets numérotés
             subGraph = self.subgraph(list(clique_wanna_be))
             # Un sous-graphe induit des sommets appartenant à clique_wanna_be
 
