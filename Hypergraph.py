@@ -1,10 +1,9 @@
 from PrimalGraph import PrimalGraph
-from cover_hypertree import *
 import matplotlib.pyplot as plt
 import numpy as np
 
 class Hypergraph :
-    def __init__(self,V={},E={},incidenceMatrix = []) :
+    def __init__(self,V=set(),E={},incidenceMatrix = []) :
         """
         Initialise l'hypergraphe
 
@@ -21,6 +20,7 @@ class Hypergraph :
         self.incidenceMatrixTranspose = self.getIncidenceMatrixTranspose()
         # Transposée de la matrice d'incidence
         self.primalGraph = self.primalGraph_OfaHypergraph()
+        # Le graphe primal de l'hypergraphe
 
     def getVertices(self) :
         """
@@ -67,7 +67,6 @@ class Hypergraph :
         """
         return PrimalGraph(self.V,self.dicoV)
 
-
     def is_alphaAcyclique(self) :
         """
         Renvoie True si le graphe est α-acyclique sinon False
@@ -77,7 +76,6 @@ class Hypergraph :
         #ou plus dans le graphe primal est une hyper-arête dans l’hypergraphe.
 
         return self.primalGraph.checkCliques(self.E) and self.primalGraph.is_chordal()
-
 
     def getIncidenceGraphMatrix(self) :
         """
@@ -89,6 +87,12 @@ class Hypergraph :
                 IncidenceMatrix[self.stringDigit(Vertex)-1][self.stringDigit(hyperedge)-1] = 1
 
         return IncidenceMatrix
+
+    def stringDigit(self,word) :
+        """
+        Renvoie le nombre contenu dans "word"
+        """
+        return int("".join([ letter for letter in word if letter.isdigit()]))
 
     def getIncidenceMatrixTranspose(self) :
         """
@@ -126,12 +130,6 @@ class Hypergraph :
                     E[hyperedge].append(Vertex)
 
         return Hypergraph(V,E)
-
-    def stringDigit(self,word) :
-        """
-        Renvoie le nombre contenu dans "word"
-        """
-        return int("".join([ letter for letter in word if letter.isdigit()]))
 
     def show(self,isHT):
         """
@@ -215,23 +213,3 @@ class Hypergraph :
                             temp = pos[self.E[e][j]]
                             line = plt.Line2D([origin[0],temp[0]], [origin[1],temp[1]],color = color[c],linewidth = 5,alpha = 0.5,clip_on=False)
                             ax.add_line(line)
-
-"""
-def testPrint(graphe) :
-    print("Vertices of graph :\n",graphe.getVertices())
-    print("\nEdges of graph :\n",graphe.getEdges())
-    print("\nAdjacency Matrix :")
-    printMatrix(graphe.getPrimalGraphMatrix())
-    print("\nIncidence Matrix :")
-    printMatrix(graphe.incidenceMatrix)
-    print("\nIncidence Matrix Transpose")
-    printMatrix(graphe.incidenceMatrixTranspose)
-    print("\n\n\n")
-
-graphe = random_graph_generator()
-testPrint(graphe)
-grapheDual = graphe.generateDualGraph()
-testPrint(grapheDual)
-
-test_hypertree(graphe)
-"""

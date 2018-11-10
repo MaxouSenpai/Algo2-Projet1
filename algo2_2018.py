@@ -26,6 +26,7 @@ def test_hypertree(hypergraph) :
     exacte pour cet hypertree .
     (si la réponse est oui, la fonction affichera également la couverture).
     """
+    PrintGraph(hypergraph)
     hypergraphDual = hypergraph.generateDualGraph()
     isHT = hypergraphDual.is_alphaAcyclique()
     # Tester si l'hypergraphe dual est α-acyclique
@@ -97,6 +98,17 @@ def random_graph_generator():
     E = {"E" + str(j+1):["v" + str(i+1) for i in range(n) if incidenceMatrix[i][j]] for j in range(m) }
 
     return Hypergraph(V,E,incidenceMatrix)
+
+def PrintGraph(Graph) :
+    print("Vertices of graph :\n",Graph.getVertices())
+    print("\nEdges of graph :\n",Graph.getEdges())
+    print("\nPrimal Graph Matrix :")
+    printMatrix(Graph.primalGraph.getPrimalGraphMatrix())
+    print("\nIncidence Matrix :")
+    printMatrix(Graph.incidenceMatrix)
+    print("\nIncidence Matrix Transpose")
+    printMatrix(Graph.incidenceMatrixTranspose)
+    print("\n")
 
 def main():
     max_subtree(random_tree_generator())
