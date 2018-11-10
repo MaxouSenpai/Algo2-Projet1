@@ -1,5 +1,4 @@
 from numpy.random import choice
-import sys
 
 class PrimalGraph :
     """
@@ -158,17 +157,17 @@ class PrimalGraph :
 
         return maxCardinalityNode
 
-    def is_chordal(self, s=None, treewidth_bound=sys.maxsize):
+    def is_chordal(self):
         """
         Étant donné l'ensemble des sommets du graphe primal,lance une recherche
-        de cardinalité maximale (en partant de s si s est donné sinon à partir
-        d'un sommet arbitraire) en essayant de trouver un cycle non-chordal.
+        de cardinalité maximale (en partant d'un sommet arbitraire)
+        en essayant de trouver un cycle non-chordal.
         """
 
         unnumbered = set(self.V)
         # Ensemble des sommets non numéroté
-        s = choice(list(self.V)) if s is None else s
-        # Choisi un sommet arbitraire s'il y a pas de sommet (s)
+        s = choice(list(self.V))
+        # Choisi un sommet arbitraire
 
         unnumbered.remove(s)
         # Supprime le sommet choisi de l'ensemble non numéroté
@@ -190,12 +189,11 @@ class PrimalGraph :
             subGraph = self.subgraph(list(clique_wanna_be))
             # Un sous-graphe induit des sommets appartenant à clique_wanna_be
 
-            if subGraph.is_complete_graph():
-                # Le graphe semble être chordal maintenant. Nous mettons à jour la largeur de l'arbre
-                current_treewidth = max(current_treewidth, len(clique_wanna_be))
-                if current_treewidth > treewidth_bound:
-                    raise TypeError
-            else:
+            isCompleteGraph = subGraph.is_complete_graph()
+            if not isCompleteGraph :
                 # Le sous-graphe n'est pas une clique
                 return False
+            #Else
+            # Le graphe semble être chordal maintenant,on continue.
+
         return True
