@@ -36,7 +36,7 @@ def test_hypertree(hypergraph) :
     hypergraphDual.show(isHT)
     # Interface graphique (GUI)
 
-def random_tree_generator(max_nodes=20):
+def random_tree_generator(max_nodes=15):
     res = ['r',np.random.randint(-100,100),[]]
     random_array = list(np.random.randint(-100,100,np.random.randint(0,max_nodes)))
     letter = 65
