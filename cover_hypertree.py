@@ -1,3 +1,8 @@
+################################
+#   Maxime Hauwaert : 461714   #
+#   Yahya Bakkali   : 445166   #
+################################
+
 from copy import deepcopy
 
 def cover_hypertree(hypertree) :

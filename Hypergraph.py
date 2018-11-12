@@ -1,3 +1,8 @@
+################################
+#   Maxime Hauwaert : 461714   #
+#   Yahya Bakkali   : 445166   #
+################################
+
 from PrimalGraph import PrimalGraph
 import matplotlib.pyplot as plt
 import numpy as np

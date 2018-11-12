@@ -1,3 +1,8 @@
+################################
+#   Maxime Hauwaert : 461714   #
+#   Yahya Bakkali   : 445166   #
+################################
+
 import matplotlib.pyplot as plt
 
 class Tree:

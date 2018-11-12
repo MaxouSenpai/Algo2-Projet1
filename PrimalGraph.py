@@ -1,3 +1,8 @@
+################################
+#   Maxime Hauwaert : 461714   #
+#   Yahya Bakkali   : 445166   #
+################################
+
 from numpy.random import choice
 
 class PrimalGraph :
@@ -59,7 +64,7 @@ class PrimalGraph :
         L'algorithme Bron-Kerbosch avec pivot est un algorithme
         permettant de trouver des cliques maximales dans un graphe
         non dirigé.
-        
+
         Renvoie toutes les cliques du graphe primal
         s'il y en a sinon une liste vide , une clique est
         un sous-graphe induit complet .
@@ -189,7 +194,7 @@ class PrimalGraph :
             numbered.add(Vertex)
             # Ajout le sommet qui a plus de connexions à l'ensemble des sommets numérotés
             clique_wanna_be = set(self.dicoV[Vertex]) & numbered
-            # Intersection de l'ensemble des sommets liée au sommet "Vertex"
+            # Intersection de l'ensemble des sommets liés au sommet "Vertex"
             # et l'ensemble des sommets numérotés
             subGraph = self.subgraph(list(clique_wanna_be))
             # Un sous-graphe induit des sommets appartenant à clique_wanna_be
