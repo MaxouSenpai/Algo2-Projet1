@@ -64,38 +64,39 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 
 	\subsection{Choix d'implémentation}
 
-	Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les noeuds à désactiver, pour qu'à l'affichage on puisse voir l'arbre de départ avec les noeuds activés (en rouge) ainsi que ceux désactivés (en gris).
+		Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les noeuds à désactiver, pour qu'à l'affichage on puisse voir l'arbre de départ avec les noeuds activés (en rouge) ainsi que ceux désactivés (en gris).
 	
 	
-	\subsection{Algorithme}
-	\begin{algorithm}[H]
-	\caption{maxContribution}
-	\begin{algorithmic}[1]
-	\REQUIRE liste noeuds\_à\_desactiver
+		\subsection{Algorithme}
+		
+		\begin{algorithm}[H]
+		\caption{maxContribution}
+		\begin{algorithmic}[1]
+		\REQUIRE liste noeuds\_à\_desactiver
 
-	\STATE poid\_total = noeud.poid
+		\STATE poid\_total = noeud.poid
 	
-	\FOR{chaque enfant du noeud}
+		\FOR{chaque enfant du noeud}
 	
-	\IF{enfant.maxContribution()$<=$ 0}
-	\STATE ajout enfant à noeuds\_à\_desactiver
+		\IF{enfant.maxContribution()$<=$ 0}
+		\STATE ajout enfant à noeuds\_à\_desactiver
 
-	\ELSE
-	\STATE ajout enfant.maxContribution() à poid\_total
+		\ELSE
+		\STATE ajout enfant.maxContribution() à poid\_total
 	
-	\ENDIF	
-	\ENDFOR
+		\ENDIF	
+		\ENDFOR
 
-	\RETURN poid\_total
+		\RETURN poid\_total
 
-	\end{algorithmic}
-	\end{algorithm}
+		\end{algorithmic}
+		\end{algorithm}
 	
-	La complexité de cet algorithme est de $0(n)$ car il parcourt chaque noeud de l'arbre, $O(n)$ et toutes les opérations faites sur chaque noeud sont en $O(1)$. Donc la complexité finale est de $O(n)$.
+		La complexité de cet algorithme est de $0(n)$ car il parcourt chaque noeud de l'arbre, $O(n)$ et toutes les opérations faites sur chaque noeud sont en $O(1)$. Donc la complexité finale est de $O(n)$.
 		
 	\subsection{Arbres aléatoires}
-	Chaque noeud peut avoir entre 0 et n//2 fils, où n = nombre de sommets encore disponible. Cela permet d'avoir des arbres aléatoires assez intéressants afin de pouvoir au mieux visualiser le problème du sous-arbre de poids maximum.
-
+	Cette génération aléatoire d'arbre a une très bonne (Fucking word I forgot). Tous les arbres sont possibles. Il y a  de 1 à n noeuds qui composeront l'arbre, 'n' étant 15 dans ce projet. Chaque noeud choisira tout simplement de qui il veut être l'enfant parmis les noeuds déja placés.
+	
 \section{Les hypergraphes et hypertrees}
 
 	
@@ -105,18 +106,97 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 	
 	\subsection{Algorithmes}
 	
+		\begin{algorithm}[H]
+		\caption{find\_cliques}
+		\begin{algorithmic}[1]
+		\REQUIRE R,P,X
+		\IF{P et X sont vides}
+		\IF{La clique R est de taille $>=$ 2}
+		\STATE ajouter R a la liste des cliques
+		\ENDIF
+		
+		\ELSE
+		
+		\STATE pivot = élement aléatoire de l'ensemble $P \cup X $
+		
+		\FOR{chaque sommet S dans l'ensemble P $\setminus$ \{sommets liés au pivot\} }
+		
+		\STATE newP = P $\cap$ \{sommets liés à S\}
+		\STATE newR = R $\cup$ \{S\}
+		\STATE newX = X $\cap$ \{sommets liés à S\}
+		\STATE find\_cliques(newP,newR,newX)
+		
+		\STATE P = P $\setminus$ \{S\}
+		\STATE X = X $\cup$ \{S\}
+		\ENDFOR		
+		
+		\ENDIF
+	
+	
+		\end{algorithmic}
+		\end{algorithm}
+
+		\begin{algorithm}[H]
+		\caption{is\_chordal}
+		\begin{algorithmic}[1]		
+		
+		\STATE unnumbered = ensemble des sommets du graphe
+		\STATE s = sommet choisi aléatoirement dans unnumbered
+		\STATE unnumbered = unnumbered $\setminus$ \{s\}
+		\STATE numbered  = \{s\}
+		\WHILE{unnumbered $!=$ \{$\emptyset$\}}
+			\STATE Vertex = le sommet de unumbered qui a le plus de connection aux sommets dans numbered
+			\STATE unnumbered = unnumbered - Vertex
+			\STATE numbered = numbered + Vertex
+			\STATE clique\_wanna\_be = \{sommets liés à Vertex\} $\cap$ numbered
+			\STATE subGraph	= Un sous-graphe induit des sommets appartenant à clique\_wanna\_be
+			\IF{le subGraph n'est pas complet}
+				\RETURN False
+			\ENDIF
+		\ENDWHILE
+		\RETURN True
+		\end{algorithmic}
+		\end{algorithm}
+		
+		
+		\begin{algorithm}[H]
+		\caption{Algorithm\_X}
+		\begin{algorithmic}[1]
+		\REQUIRE Matrice M
+		
+		\IF{M est vide}
+			\STATE Ajouter la solution partielle aux solutions finales
+		
+		\ELSE
+			\STATE c = collone de M contenant un minimum de 1
+			\STATE l = ligne de M tel que $M_{l,c}$ = 1
+			\STATE Ajouter l à la solution partielle
+			\FOR{chaque colonne j tel que $M_{l,j}$ = 1}
+			\FOR{chaque ligne i tel que $M_{i,j}$ = 1}
+			\STATE Supprimer la ligne i de M
+			\ENDFOR
+			\STATE Supprimer la colonne j de M
+			\ENDFOR
+			\STATE Algorithm\_X(M)
+		\ENDIF
+		
+	
+		\end{algorithmic}
+		\end{algorithm}
+		
+	
 	\subsection{Hypergraphes aléatoires}
 	
 \section{Librairies utilisées}
 
-\subsection{Numpy}
-	C'est une librairie très utile dans la manipulation de tableaux comme des matrices, des vecteurs, etc ainsi que dans l'utilisation d'opérations mathématiques tel que les fonctions sinus/cosinus, etc.
+	\subsection{Numpy}
+		C'est une librairie très utile dans l'utilisation d'opérations mathématiques tel que les fonctions sinus/cosinus, etc et dans la manipulation de l'aléatoire.
 
-\subsection{Matplotlib}
-	C'est une librairie assez utile dans l'affichage d'objet mathématique en 2D tel que des cercles, des lignes, des graphiques, etc.
+	\subsection{Matplotlib}
+		C'est une librairie assez utile dans l'affichage d'objet mathématique en 2D tel que des cercles, des lignes, des graphiques, etc.
 	
-\subsection{Random}
-	C'est une librairie permettant de facilement ajouter de l'aléatoire dans un code python.
+	\subsection{Copy}
+		C'est une librairie permettant de copier l'intégralité d'un objet sans qu'il n'y ait de liens entre l'ancien et le nouvel objet.
 
 \section{Conclusion}
 	What do you even wanna say? (Group project?)
