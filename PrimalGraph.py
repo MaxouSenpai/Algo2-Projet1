@@ -56,6 +56,10 @@ class PrimalGraph :
 
     def find_cliques(self,P,R=set(),X=set(),cliques=[]) :
         """
+        L'algorithme Bron-Kerbosch avec pivot est un algorithme
+        permettant de trouver des cliques maximales dans un graphe
+        non dirigé.
+        
         Renvoie toutes les cliques du graphe primal
         s'il y en a sinon une liste vide , une clique est
         un sous-graphe induit complet .

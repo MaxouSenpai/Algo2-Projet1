@@ -29,19 +29,16 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
     mat = deepcopy(matrix)
     column = findMinColumn(mat)[0]
     # La première colonne C (column) contenant un minimum de 1
-    lineIteration , Rows = findRows(mat,column)
-    # Un compteur des lignes et une liste des lignes trouvées
+    Rows = findRows(mat,column)
+    # une liste des lignes (L) trouvées telle que matrice[L][C] = 1
 
-    while lineIteration > 0 :
-
-        row = Rows[len(Rows)-lineIteration]
+    for row in Rows :
         # Une ligne L (row) telle que matrice[L][C] = 1
         columnslist = []
         # Liste contenant les colonnes à supprimer
         rowslist = []
         # Liste contenant les lignes à supprimer
 
-        print("\nlineIteration :",lineIteration)
         print("Row :",mat[row][0])
 
         solution.append(mat[row][0])
@@ -59,9 +56,9 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
                         # Pour chaque ligne I (line) telle que matrice[I][J] = 1
                         if line not in rowslist  :
                             rowslist.append(line)
-                            # Ajoute la ligne I de la matrice
+                            # Ajoute la ligne I de la matrice au rowslist
                 columnslist.append(colonne)
-                # Ajoute la colonne J de la matrice
+                # Ajoute la colonne J de la matrice au columnslist
 
         mat = cutMatrix(mat,rowslist,columnslist)
         # Supprime les colonnes et les lignes de la matrice
@@ -87,8 +84,6 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
 
         solution.pop()
         # On supprime la ligne L de la solution partielle
-        lineIteration -= 1
-        # Décrémente le compteur des lignes
         mat = deepcopy(matrix)
         # Reprendre sur la matrice d'avant pour la ligne suivante
 
@@ -99,10 +94,7 @@ def findRows(mat,column) :
     Renvoie une liste des lignes L telle que matrice[L][C] = 1
     C (column) et la longueur de cette liste.
     """
-    rows = [ row for row in range(1,len(mat)) if mat[row][column]]
-    iteration = len(rows)
-
-    return iteration,rows
+    return [ row for row in range(1,len(mat)) if mat[row][column]]
 
 def findMinColumn(mat) :
     """
