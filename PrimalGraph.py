@@ -155,7 +155,7 @@ class PrimalGraph :
 
     def max_cardinality_node(self, choices, wanna_connect):
         """
-        Retourne un sommet dans les choix qui a plus de connexions
+        Retourne un sommet dans les choix qui a le plus de connexions
         en graphe aux sommets dans wanna_connect.
         """
 
@@ -168,7 +168,7 @@ class PrimalGraph :
             if connections > maxConnections:
                 maxConnections = connections
                 maxCardinalityNode = choice
-                # Sommet qui a plus de connexions
+                # Sommet qui a le plus de connexions
 
         return maxCardinalityNode
 
@@ -180,24 +180,24 @@ class PrimalGraph :
         """
 
         unnumbered = set(self.V)
-        # Ensemble des sommets non numéroté
+        # Ensemble des sommets non numérotés
         s = choice(list(self.V))
         # Choisi un sommet arbitraire
 
         unnumbered.remove(s)
         # Supprime le sommet choisi de l'ensemble non numéroté
         numbered = set([s])
-        # Ajout le sommet choisi à l'ensemble des sommets numéroté
+        # Ajoute le sommet choisi à l'ensemble des sommets numérotés
 
         while unnumbered:
 
             Vertex = self.max_cardinality_node(unnumbered, numbered)
-            # Sommet qui a plus de connexions aux sommets dans numbered
+            # Sommet qui a le plus de connexions aux sommets dans numbered
             unnumbered.remove(Vertex)
-            # Supprime le sommet qui a plus de connexions dans
+            # Supprime le sommet qui a le plus de connexions dans
             # l'ensemble des sommets non numérotés
             numbered.add(Vertex)
-            # Ajout le sommet qui a plus de connexions à l'ensemble des sommets numérotés
+            # Ajoute le sommet qui a le plus de connexions à l'ensemble des sommets numérotés
             clique_wanna_be = set(self.dicoV[Vertex]) & numbered
             # Intersection de l'ensemble des sommets liés au sommet "Vertex"
             # et l'ensemble des sommets numérotés

@@ -8,7 +8,7 @@ from copy import deepcopy
 def cover_hypertree(hypertree) :
     """
     Une fonction qui prend en paramètre un hypertree et affichera
-    si oui ou nous il existe une couverture exacte pour cet hypertree
+    si oui ou non il existe une couverture exacte pour cet hypertree
     (si la réponse est oui, la fonction affichera également la couverture).
     """
     matrix = modifyMat(hypertree.getIncidenceMatrixTranspose())
@@ -26,7 +26,7 @@ def cover_hypertree(hypertree) :
 def Algorithm_X(matrix,solution=[],allSolution = []) :
     """
     L'algorithme de Knuth X est un algorithme récursif,non déterministe,
-    depth-first,backtracking algorithme .Il permet de trouver des solutions
+    depth-first,backtracking algorithme. Il permet de trouver des solutions
     au problème de la couverture exacte.
     """
 
@@ -34,7 +34,7 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
     column = findMinColumn(mat)[0]
     # La première colonne C (column) contenant un minimum de 1
     Rows = findRows(mat,column)
-    # une liste des lignes (L) trouvées telle que matrice[L][C] = 1
+    # Une liste des lignes (L) trouvées telle que matrice[L][C] = 1
 
     for row in Rows :
         # Une ligne L (row) telle que matrice[L][C] = 1
@@ -60,9 +60,9 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
                         # Pour chaque ligne I (line) telle que matrice[I][J] = 1
                         if line not in rowslist  :
                             rowslist.append(line)
-                            # Ajoute la ligne I de la matrice au rowslist
+                            # Ajoute la ligne I de la matrice à rowslist
                 columnslist.append(colonne)
-                # Ajoute la colonne J de la matrice au columnslist
+                # Ajoute la colonne J de la matrice à columnslist
 
         mat = cutMatrix(mat,rowslist,columnslist)
         # Supprime les colonnes et les lignes de la matrice

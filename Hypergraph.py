@@ -47,7 +47,7 @@ class Hypergraph :
     def getDicoV(self) :
         """
         Renvoie un dictionnaire avec les sommets de l'hypergraphe comme clés
-        et comme valeur les autres sommets qui se trouvent dans
+        et comme valeurs les autres sommets qui se trouvent dans
         la même hyper-arête.
         """
         dicoV = { Vertex :[] for Vertex in self.V }
