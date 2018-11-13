@@ -92,7 +92,7 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\end{algorithmic}
 		\end{algorithm}
 	
-		La complexité de cet algorithme est de $O(n)$ car il parcourt chaque nœud de l'arbre, $O(n)$ et à chaque nœud $O(1)$. Donc la complexité finale est de $O(n)$.
+		La complexité de cet algorithme est de $O(n)$ car il parcourt chaque nœud de l'arbre, $O(n)$ et à chaque nœud on additionne deux valeurs en $O(1)$, on compare deux valeurs en $O(1)$ et on ajoute à chaque fois\footnote{Au pire des cas} le nom du noeud dans une liste donc $O(1)$. Donc la complexité finale est de $O(n)$.
 		
 	\subsection{Arbres aléatoires}
 	Cette génération aléatoire d'arbres a une très bonne distribution. Tous les arbres sont possibles. Il y a  de 1 à n nœuds qui composeront l'arbre, 'n' étant 15 dans ce projet. Chaque nœud choisira tout simplement de qui il veut être l'enfant parmi les nœuds déja placés.
@@ -227,13 +227,13 @@ W : nombre de sommets dans "numbered"\\
 \section{Librairies utilisées}
 
 	\subsection{Numpy}
-		C'est une librairie très utile dans l'utilisation d'opérations mathématiques telles que les fonctions sinus/cosinus, etc ainsi que dans la manipulation de l'aléatoire.
+		C'est une librairie très utile dans ce projet pour l'utilisation d'opérations mathématiques telles que les fonctions sinus/cosinus, etc ainsi que dans la manipulation de l'aléatoire.
 
 	\subsection{Matplotlib}
-		C'est une librairie assez utile dans l'affichage d'objets mathématiques en 2D tels que des cercles, des lignes, des graphiques, etc.
+		C'est une librairie assez utile dans ce projet pour l'affichage d'objets mathématiques en 2D tels que des cercles, des lignes, etc.
 	
 	\subsection{Copy}
-		C'est une librairie permettant de copier l'intégralité d'un objet sans qu'il n'y ait de liens entre l'ancien et le nouvel objet.
+		C'est une librairie contenant la fonction "deepcopy" permettant de copier l'intégralité d'un objet sans qu'il n'y ait de liens entre l'ancien et le nouvel objet.
 
 \section{Conclusion}
 	En plus de la simple mise en pratique de certains concepts sur les graphes, ce projet nous a permis de développer nos compétences de travail en groupe.
