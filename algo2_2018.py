@@ -112,7 +112,7 @@ def PrintGraph(Graph) :
     print("\nIncidence Matrix :")
     printMatrix(Graph.incidenceMatrix)
     print("\nIncidence Matrix Transpose")
-    printMatrix(Graph.incidenceMatrixTranspose)
+    printMatrix(Graph.getIncidenceMatrixTranspose())
     print("\n")
 
 def main():

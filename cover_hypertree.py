@@ -11,10 +11,9 @@ def cover_hypertree(hypertree) :
     si oui ou non il existe une couverture exacte pour cet hypertree
     (si la réponse est oui, la fonction affichera également la couverture).
     """
-    matrix = modifyMat(hypertree.incidenceMatrixTranspose)
-    # Utiliser la transposée de la matrice d'incidence
-    # Lignes de la matrice == les hyper-arêtes
-    # Colonnes de la matrice == Les sommets
+    matrix = modifyMat(hypertree.getIncidenceMatrixTranspose())
+    # Travailler su la transposée de la matrice d'incidence qui a comme
+    # lignes les hyper-arêtes et comme colonnes les sommets
     solution = Algorithm_X(matrix,[],[])
     # Trouver des solutions au problème de la couverture exacte s'il y en a .
 
@@ -44,7 +43,7 @@ def Algorithm_X(matrix,solution=[],allSolution = []) :
         rowslist = []
         # Liste contenant les lignes à supprimer
 
-        print("Row :",mat[row][0])
+        print("\nRow :",mat[row][0])
 
         solution.append(mat[row][0])
         # On ajoute la ligne L à la solution partielle

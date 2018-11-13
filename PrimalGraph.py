@@ -20,10 +20,11 @@ class PrimalGraph :
             dicoV : Dictionnaire contenant les sommets comme clés et comme
                     valeurs les sommets contenus dans la même hyper-arête
         """
-        self.n = len(V)
-        # Nombre de sommets
+
         self.V = V
         self.dicoV = dicoV
+        self.graphVertices = len(V)
+        # Nombre de sommets
         self.E = self.getEdges()
         # Les arêtes entre les sommets du graphe primal
 
@@ -97,6 +98,7 @@ class PrimalGraph :
         """
         cliques = self.find_cliques(self.V)
         # Cliques maximales
+        
         if cliques :
             print("Les cliques maximales du graphe primal :")
             print("\n".join(str(cliques[i]) for i in range(len(cliques))))
@@ -115,7 +117,7 @@ class PrimalGraph :
 
         return check
 
-    def subgraph(self,liste) :
+    def subgraph(self,vertexSet) :
         """
         Renvoie un sous-graphe induit
         """
@@ -126,10 +128,12 @@ class PrimalGraph :
         #si x est connecté à y dans G.
 
         newDico = {}
+        vertexList = list(vertexSet)
         for Vertex in self.dicoV :
-            if Vertex in liste :
-                newDico[Vertex] = list(set(self.dicoV[Vertex]) & set(liste))
-        return PrimalGraph(set(liste),newDico)
+            if Vertex in vertexList :
+                newDico[Vertex] = list(set(self.dicoV[Vertex]) & vertexSet)
+
+        return PrimalGraph(vertexSet,newDico)
 
     def is_complete_graph(self) :
         """
@@ -139,11 +143,12 @@ class PrimalGraph :
         #est un graphe simple dont tous les sommets sont adjacents, c'est-à-dire
         #que tout couple de sommets disjoints est relié par une arête.
 
-        if self.n < 2:
+        if self.graphVertices < 2:
+            # Nombre de sommets égale 1 ou 0
             return True
         graphEdges = len(self.E)
         # Nombre des arêtes du graphe primal
-        graphMaxEdges = ((self.n * (self.n - 1)) / 2)
+        graphMaxEdges = ((self.graphVertices * (self.graphVertices - 1)) / 2)
         # Nombre maximal des arêtes qu'un graphe primal peut avoir
 
         return graphEdges == graphMaxEdges
@@ -196,10 +201,10 @@ class PrimalGraph :
             clique_wanna_be = set(self.dicoV[Vertex]) & numbered
             # Intersection de l'ensemble des sommets liés au sommet "Vertex"
             # et l'ensemble des sommets numérotés
-            subGraph = self.subgraph(list(clique_wanna_be))
+            subGraph = self.subgraph(clique_wanna_be)
             # Un sous-graphe induit des sommets appartenant à clique_wanna_be
-
             isCompleteGraph = subGraph.is_complete_graph()
+            # Vérifier si le sous-graphe est complet
             if not isCompleteGraph :
                 # Le sous-graphe n'est pas une clique
                 return False

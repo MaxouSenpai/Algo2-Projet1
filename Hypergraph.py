@@ -15,15 +15,13 @@ class Hypergraph :
         Prend en paramètre :
             V : Ensemble des sommets de l'hypergraphe
             E : Dictionnaire contenant les hyper-arêtes comme clés et les sommets qui appartiennent à cette hyper-arête comme valeurs
-            incidenceMatrix : La matrice d'incidence de l'hypergraph
+            incidenceMatrix : La matrice d'incidence de l'hypergraphe
         """
         self.V = V
         self.E = E
-        self.incidenceMatrix = incidenceMatrix if incidenceMatrix != [] else self.getIncidenceGraphMatrix()
+        self.incidenceMatrix = incidenceMatrix
         self.dicoV = self.getDicoV()
         # Dictionnaire contenant les sommets comme clés et les sommets contenus dans la même hyper-arête
-        self.incidenceMatrixTranspose = self.getIncidenceMatrixTranspose()
-        # Transposée de la matrice d'incidence
         self.primalGraph = self.primalGraph_OfaHypergraph()
         # Le graphe primal de l'hypergraphe
 
@@ -55,14 +53,21 @@ class Hypergraph :
         dicoV = { Vertex :[] for Vertex in self.V }
 
         for hyperedge in self.E :
+            # Une hyper-arête dans E
             x = len(self.E[hyperedge])
             if x > 1 :
                 for i in range(x) :
+                    Vertex = self.E[hyperedge][i]
+                    # Sommet qui se trouve dans l'hyper-arête
+
                     for j in range(i+1,x) :
-                        if self.E[hyperedge][j] not in dicoV[self.E[hyperedge][i]] :
-                            dicoV[self.E[hyperedge][i]].append(self.E[hyperedge][j])
-                        if self.E[hyperedge][i] not in dicoV[self.E[hyperedge][j]] :
-                            dicoV[self.E[hyperedge][j]].append(self.E[hyperedge][i])
+                        Vertex2 = self.E[hyperedge][j]
+                        # Un autre sommet qui se trouve dans la même hyper-arête
+
+                        if Vertex2 not in dicoV[Vertex] :
+                            dicoV[Vertex].append(Vertex2)
+                        if Vertex not in dicoV[Vertex2] :
+                            dicoV[Vertex2].append(Vertex)
         return dicoV
 
 
@@ -82,23 +87,6 @@ class Hypergraph :
 
         return self.primalGraph.checkCliques(self.E) and self.primalGraph.is_chordal()
 
-    def getIncidenceGraphMatrix(self) :
-        """
-        Renvoie la matrice d'incidence
-        """
-        IncidenceMatrix = [[0 for _ in range(len(self.E))] for _ in range(len(self.V)) ]
-        for hyperedge in self.E :
-            for Vertex in self.E[hyperedge] :
-                IncidenceMatrix[self.stringDigit(Vertex)-1][self.stringDigit(hyperedge)-1] = 1
-
-        return IncidenceMatrix
-
-    def stringDigit(self,word) :
-        """
-        Renvoie le nombre contenu dans "word"
-        """
-        return int("".join([ letter for letter in word if letter.isdigit()]))
-
     def getIncidenceMatrixTranspose(self) :
         """
         Renvoie la transposée de la matrice d'incidence
@@ -117,24 +105,17 @@ class Hypergraph :
         #H* = (V*,E*) où V* = E et pour chaque sommet v dans V,
         #nous avons une hyper-arête dans E* de la forme Ev = {X ⊆ E : v ∈ X}.
 
-        n = len(self.incidenceMatrixTranspose)
-        m = len(self.incidenceMatrixTranspose[0])
+        incidenceMatrixTranspose = self.getIncidenceMatrixTranspose()
+        # Transposée de la matrice d'incidence
+        n = len(incidenceMatrixTranspose)
+        m = len(incidenceMatrixTranspose[0])
 
         V = set("E" + str(i+1) for i in range(n))
         # V* = E
-        E = { "Ev" + str(j+1) : [] for j in range(m)}
+        E = {"Ev" + str(j+1):["E" + str(i+1) for i in range(n) if incidenceMatrixTranspose[i][j]] for j in range(m) }
         # Une hyper-arête dans E* de la forme Ev = {X ⊆ E : v ∈ X}
 
-        for i in range(n) :
-            Vertex = "E" + str(i+1)
-
-            for j in range(m) :
-                hyperedge = "Ev" + str(j+1)
-
-                if self.incidenceMatrixTranspose[i][j] == 1 :
-                    E[hyperedge].append(Vertex)
-
-        return Hypergraph(V,E)
+        return Hypergraph(V,E,incidenceMatrixTranspose)
 
     def show(self,isHT):
         """
