@@ -59,12 +59,12 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 
 \section{Sous-arbre de poids maximum}
 	\subsection{Introduction}
-		Dans ce problème nous manipulons des arbres constitués de noeuds ayant un poid. Le problème consiste à transformer un arbre $T=(V,E)$ en arbre ${T'}=({V'},{E'})$ de façon à maximiser la fonction
+		Dans ce problème nous manipulons des arbres constitués de nœuds ayant un poids. Le problème consiste à transformer un arbre $T=(V,E)$ en arbre ${T'}=({V'},{E'})$ de façon à maximiser la fonction
 		$$w({V'})=\sum_{v\in{V'}} w(v)$$
 
 	\subsection{Choix d'implémentation}
 
-		Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les noeuds à désactiver, pour qu'à l'affichage on puisse voir l'arbre de départ avec les noeuds activés (en rouge) ainsi que ceux désactivés (en gris).
+		Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les nœuds à désactiver, pour qu'à l'affichage on puisse voir l'arbre de départ avec les nœuds activés (en rouge) ainsi que ceux désactivés (en gris).
 	
 	
 		\subsection{Algorithme}
@@ -72,30 +72,30 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\begin{algorithm}[H]
 		\caption{maxContribution}
 		\begin{algorithmic}[1]
-		\REQUIRE liste noeuds\_à\_desactiver
+		\REQUIRE liste nœuds\_à\_désactiver
 
-		\STATE poid\_total = noeud.poid
+		\STATE poids\_total = nœud.poids
 	
-		\FOR{chaque enfant du noeud}
+		\FOR{chaque enfant du nœud}
 	
 		\IF{enfant.maxContribution()$<=$ 0}
-		\STATE ajout enfant à noeuds\_à\_desactiver
+		\STATE Ajouter enfant à nœuds\_à\_désactiver
 
 		\ELSE
-		\STATE ajout enfant.maxContribution() à poid\_total
+		\STATE Ajouter enfant.maxContribution() à poids\_total
 	
 		\ENDIF	
 		\ENDFOR
 
-		\RETURN poid\_total
+		\RETURN poids\_total
 
 		\end{algorithmic}
 		\end{algorithm}
 	
-		La complexité de cet algorithme est de $0(n)$ car il parcourt chaque noeud de l'arbre, $O(n)$ et toutes les opérations faites sur chaque noeud sont en $O(1)$. Donc la complexité finale est de $O(n)$.
+		La complexité de cet algorithme est de $O(n)$ car il parcourt chaque nœud de l'arbre, $O(n)$ et à chaque nœud $O(1)$. Donc la complexité finale est de $O(n)$.
 		
 	\subsection{Arbres aléatoires}
-	Cette génération aléatoire d'arbre a une très bonne (Fucking word I forgot). Tous les arbres sont possibles. Il y a  de 1 à n noeuds qui composeront l'arbre, 'n' étant 15 dans ce projet. Chaque noeud choisira tout simplement de qui il veut être l'enfant parmis les noeuds déja placés.
+	Cette génération aléatoire d'arbres a une très bonne distribution. Tous les arbres sont possibles. Il y a  de 1 à n nœuds qui composeront l'arbre, 'n' étant 15 dans ce projet. Chaque nœud choisira tout simplement de qui il veut être l'enfant parmi les nœuds déja placés.
 	
 \section{Les hypergraphes et hypertrees}
 
@@ -109,10 +109,10 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\begin{algorithm}[H]
 		\caption{find\_cliques}
 		\begin{algorithmic}[1]
-		\REQUIRE R,P,X
+		\REQUIRE R : \{nœuds d'une clique maximale\}, P : \{nœuds possibles dans une clique maximale\}, X : \{nœuds exclus\}
 		\IF{P et X sont vides}
-		\IF{La clique R est de taille $>=$ 2}
-		\STATE ajouter R a la liste des cliques
+		\IF{la clique R est de taille $>=$ 2}
+		\STATE Ajouter R a la liste des cliques
 		\ENDIF
 		
 		\ELSE
@@ -145,7 +145,7 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\STATE unnumbered = unnumbered $\setminus$ \{s\}
 		\STATE numbered  = \{s\}
 		\WHILE{unnumbered $!=$ \{$\emptyset$\}}
-			\STATE Vertex = le sommet de unumbered qui a le plus de connection aux sommets dans numbered
+			\STATE Vertex = le sommet de unumbered qui a le plus de connections aux sommets de numbered
 			\STATE unnumbered = unnumbered - Vertex
 			\STATE numbered = numbered + Vertex
 			\STATE clique\_wanna\_be = \{sommets liés à Vertex\} $\cap$ numbered
@@ -157,29 +157,66 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\RETURN True
 		\end{algorithmic}
 		\end{algorithm}
+
+Au début, nous créons I , choisissons un sommet 
+arbitraire I : O(N) , enlevons ce sommet du I : O(1) ,
+créons II contenant ce sommet : O(1) .
+Ensuite, tant que I n'est pas vide : O(N) nous chercherons
+un sommet "Vertex" dans I qui a le plus de connexions aux sommets 
+dans II : O(S x V x W) après nous supprimons ce sommet du I en 
+l'ajoutant au II : O(1) puis créons un ensemble contenant 
+l'intersection entre II et III : O(min(W,len(III))) et le 
+sous-graphe induit à partir de cet ensemble : 
+O(N x min(W,len(III)) x min(V,len(III)) ) .
+Ce qui fait au final une complexité de
+        O(N * max( min(W,len(III)) , N x min(W,len(III)) x min(V,len(III)) ))
+    =   O(N ** 2 x min(W,len(III)) x min(V,len(III)) )\\
+    
+Statique :\\
+III : ensemble des sommets liés au sommet "Vertex"\\
+N : nombre de sommets du graphe \\
+V : nombre de sommets d'une liste dans le dictionnaire\\
+
+Dynamique :\\
+I : ensemble des sommets du graphe "unnumbered"\\
+II: ensemble des sommets "numbered"\\
+S : nombre de sommets dans "unnumbered"\\
+W : nombre de sommets dans "numbered"\\
 		
 		
 		\begin{algorithm}[H]
 		\caption{Algorithm\_X}
 		\begin{algorithmic}[1]
-		\REQUIRE Matrice M
+		\REQUIRE Matrice
 		
-		\IF{M est vide}
-			\STATE Ajouter la solution partielle aux solutions finales
-		
+		\STATE Faire une copie de la matrice et exécuter l'algorithme sur cette matrice		
+		\STATE Choisir la colonne C contenant un minimum de 1
+		\STATE L = L'ensemble des lignes tel que $Matrice_{l,c}$ = 1, $\forall l \in L$
+		\FOR{chaque ligne l de L}
+			\STATE columnslist = []
+			\STATE rowslist = []
+			\STATE Ajouter la ligne à la solution partielle
+			\FOR{chaque colonne j de la matrice}
+				\IF{$Matrice_{l,j} = 1$}
+					\FOR{chaque ligne i de la matrice}
+						\IF{$Matrice_{i,j} = 1$}
+							\STATE Ajouter la ligne i à rowlist
+						\ENDIF									
+					\ENDFOR
+					\STATE Ajouter la colonne j de la matrice à columnslist	
+				\ENDIF
+			\ENDFOR
+		\STATE Supprimer les lignes et les colonnes de la matrice présentes dans rowslist et columnslist
+		\IF{la matrice n'est pas vide}
+			\IF{toutes les colonnes de la matrice ont au moins un 1}
+				\STATE Répéter cet algorithme de façon récursive sur la matrice réduite
+			\ENDIF			
 		\ELSE
-			\STATE c = collone de M contenant un minimum de 1
-			\STATE l = ligne de M tel que $M_{l,c}$ = 1
-			\STATE Ajouter l à la solution partielle
-			\FOR{chaque colonne j tel que $M_{l,j}$ = 1}
-			\FOR{chaque ligne i tel que $M_{i,j}$ = 1}
-			\STATE Supprimer la ligne i de M
-			\ENDFOR
-			\STATE Supprimer la colonne j de M
-			\ENDFOR
-			\STATE Algorithm\_X(M)
-		\ENDIF
-		
+			\STATE Ajouter la solution à l'ensemble des solutions
+		\ENDIF 
+		\STATE Supprimer la ligne de la solution partielle
+		\STATE Réutiliser la matrice de départ
+		\ENDFOR
 	
 		\end{algorithmic}
 		\end{algorithm}
@@ -190,15 +227,15 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 \section{Librairies utilisées}
 
 	\subsection{Numpy}
-		C'est une librairie très utile dans l'utilisation d'opérations mathématiques tel que les fonctions sinus/cosinus, etc et dans la manipulation de l'aléatoire.
+		C'est une librairie très utile dans l'utilisation d'opérations mathématiques telles que les fonctions sinus/cosinus, etc ainsi que dans la manipulation de l'aléatoire.
 
 	\subsection{Matplotlib}
-		C'est une librairie assez utile dans l'affichage d'objet mathématique en 2D tel que des cercles, des lignes, des graphiques, etc.
+		C'est une librairie assez utile dans l'affichage d'objets mathématiques en 2D tels que des cercles, des lignes, des graphiques, etc.
 	
 	\subsection{Copy}
 		C'est une librairie permettant de copier l'intégralité d'un objet sans qu'il n'y ait de liens entre l'ancien et le nouvel objet.
 
 \section{Conclusion}
-	What do you even wanna say? (Group project?)
+	En plus de la simple mise en pratique de certains concepts sur les graphes, ce projet nous a permis de développer nos compétences de travail en groupe.
 
 \end{document}

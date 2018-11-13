@@ -31,7 +31,7 @@ class Tree:
             nodes_to_desactivate : Liste des noeuds à désactiver
 
         Retourne :
-            res : La contribution max du noeud courrant
+            res : La contribution max du noeud courant
         """
 
         res = self.weight
@@ -39,7 +39,7 @@ class Tree:
         for child in self.children:
             temp = child.maxContribution(nodes_to_desactivate)
             if temp <= 0:
-                # Si la contribution du fils courrant est nulle où négative on ajoute le fils à la liste "nodes_to_desactivate"
+                # Si la contribution du fils courant est nulle où négative on ajoute le fils à la liste "nodes_to_desactivate"
                 nodes_to_desactivate.append(child.name)
             else:
                 res += temp
@@ -81,7 +81,7 @@ class Tree:
         Prend en paramètre :
             ax : Les axes
             nodes_to_desactivate : La liste du nom des noeuds à désactiver
-            current_state : L'état du père du noeud courrant
+            current_state : L'état du père du noeud courant
             x : La position x du noeud courant
             y : La position y du noeud courant
             space : La différence Y entre un père et son fils
