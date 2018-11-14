@@ -172,12 +172,12 @@ le sommet "Vertex" dans unnumbered qui a le plus de connexions aux sommets
 de numbered $O(S * N * W) = O((N/2)^2*N) = O(N^3/4)$ parce que la cardinalité 
 de l'ensemble $\{S+W\}$ est toujours égale à N, après nous supprimons ce sommet d'unnumbered en 
 l'ajoutant à numbered $O(1)$ puis nous créons un ensemble qui contiendra 
-l'intersection entre numbered et A $O(\min(W,len(A)))$ et le 
-sous-graphe induit a partir de cet ensemble $O(N*\min(W,len(A))*\min(V,len(A)))$.
+l'intersection entre numbered et l'ensemble des sommets liés au sommet "Vertex" $O(\min(W,A))$ et le 
+sous-graphe induit a partir de cet ensemble $O(N*\min(W,A)*\min(V,A))$.
 Ce qui fait en final une complexite de
-$O(N*\max(N^3/4,\min(W,len(A)),N*\min(W,len(A))*\min(N,len(A))))$\\\\
+$O(N*\max(N^3/4,\min(W,A),N*\min(W,A)*\min(N,A)))$\\\\
 \noindent
-A : ensemble des sommets liés au sommet "Vertex"\\
+A : nombre de sommets liés au sommet "Vertex"\\
 N : nombre de sommets du graphe\\
 S : nombre de sommets dans "unnumbered"\\
 W : nombre de sommets dans "numbered"
