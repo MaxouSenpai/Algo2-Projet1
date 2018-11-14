@@ -81,10 +81,11 @@ def random_graph_generator():
 
     max_hyperedge = 2**n - 1
     # Maximum d'hyper-arêtes qu'on peut obtenir avec n sommets
-    m = randint(1,16)
+
+    x = min(16,max_hyperedge+1)
+    # Maximum d'hyper-arêtes
+    m = randint(1,x)
     # Nombre d'hyper-arêtes
-    while m > max_hyperedge :
-        m = randint(1,16)
 
     MatrixTranspose = []
     i = 0

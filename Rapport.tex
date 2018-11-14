@@ -193,7 +193,7 @@ W : nombre de sommets dans "numbered"
 		\STATE Choisir la colonne C contenant un minimum de 1
 		\STATE L = L'ensemble des lignes tel que $Matrice_{l,c}$ = 1, $\forall l \in L$
 		\FOR{chaque ligne l de L}
-			\STATE columnslist = []
+			\STATE columnslist = [] time. This bound is tight  time. This bound is tight as may be seen for instances consisting of many disjoint copies of the set system  time. This bound is tight as may be seen for instances consisting of many disjoint copies of the set system as may be seen for instances consisting of many disjoint copies of the set system 
 			\STATE rowslist = []
 			\STATE Ajouter la ligne à la solution partielle
 			\FOR{chaque colonne j de la matrice}
@@ -243,7 +243,11 @@ NP (complexity)
 		
 	
 	\subsection{Hypergraphes aléatoires}
-	
+	On crée d'abord l'ensemble de n sommets\footnote{15 étant une limite imposée}, n pouvant aller de 1 à 15, ensuite on détermine le nombre m d'hyper-arêtes\footnote{15 étant une limite arbitraire}, m pouvant aller de 0 à $\min(2^n-1,15)$.
+
+\section{Interface graphique}
+	Pour la première partie du projet, on affiche à l'écran tous les noeuds de l'arbre de départ. Les noeuds faisant partis du sous-arbre de poids maximum seront colorés en rouge et les autres seront colorés en gris.\\\ \\\ Pour la deuxième partie, on affiche à l'écran l'hypergraphe dual sous deux formes, son graphe primal et son graphe d'incidence, et on affiche si oui ou non c'est un hyper-arbre. (+ terminal)
+
 \section{Librairies utilisées}
 
 	\subsection{Numpy}
