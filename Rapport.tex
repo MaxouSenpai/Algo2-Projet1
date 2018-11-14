@@ -98,10 +98,9 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 	Cette génération aléatoire d'arbres a une très bonne distribution. Tous les arbres sont possibles. Il y a  de 1 à n nœuds qui composeront l'arbre, 'n' étant 15 dans ce projet. Chaque nœud choisira tout simplement de qui il veut être l'enfant parmi les nœuds déja placés.
 	
 \section{Les hypergraphes et hypertrees}
-
 	
 	\subsection{Introduction}
-	Dans cette partie nous manipulons des hyper-graphes et des hyper-graphes duals. Les outils utiles pour travailler sur les hyper-graphes sont les graphes d’incidence et les graphes primals. On manipule plusieurs concepts comme les graphes acycliques, les hyper-arbres, les cliques maximales, la chordalité et la couverture exacte.
+	Dans cette partie nous manipulons des hyper-graphes et des hyper-graphes duals. Les outils utiles pour travailler sur les hyper-graphes sont les graphes d’incidence et les graphes primals. On manipule plusieurs concepts comme les graphes $\alpha$-acycliques, les hyper-arbres, les cliques maximales, la chordalité et la couverture exacte.
 	
 	\subsection{Choix d'implémentation}
 	Pour stocker l'hyper-graphe nous avons décidé d'utiliser une classe nommée "Hypergraph". Chaque objet de cette classe a un ensemble de ses sommets, un dictionnaire d'hyper-arêtes, une matrice d'incidence, un dictionnaire de sommets liés et un graphe primal.
@@ -243,7 +242,7 @@ NP (complexity)
 		
 	
 	\subsection{Hypergraphes aléatoires}
-	On crée d'abord l'ensemble de n sommets\footnote{15 étant une limite imposée}, n pouvant aller de 1 à 15, ensuite on détermine le nombre m d'hyper-arêtes\footnote{15 étant une limite arbitraire}, m pouvant aller de 0 à $\min(2^n-1,15)$.
+	On crée d'abord l'ensemble de n sommets\footnote{15 étant une limite imposée}, n pouvant aller de 1 à 15, ensuite on détermine le nombre m d'hyper-arêtes\footnote{15 étant une limite arbitraire}, m pouvant aller de 0 à $\min(2^n-1,15)$. Après pour chaque hyper-arête on détermine quels sommets y sont liés, chaque sommet a 50\% de chance d'appartenir à cette hyper-arête. Une verification est faite pour ne pas avoir deux hyper-arêtes les mêmes.
 
 \section{Interface graphique}
 	Pour la première partie du projet, on affiche à l'écran tous les noeuds de l'arbre de départ. Les noeuds faisant partie du sous-arbre de poids maximum seront colorés en rouge et les autres seront colorés en gris.\\\ \\\ Pour la deuxième partie, on affiche à l'écran l'hypergraphe dual sous deux formes, son graphe primal et son graphe d'incidence, et on affiche si oui ou non c'est un hyper-arbre. (+ terminal)
