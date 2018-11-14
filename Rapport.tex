@@ -12,8 +12,8 @@
 
 \renewcommand{\contentsname}{Table des matières}
 \renewcommand{\tablename}{\Large Tableau}
-\renewcommand{\cftsecfont}{\LARGE}
-\renewcommand{\cftsubsecfont}{\Large}
+\renewcommand{\cftsecfont}{\Large}
+\renewcommand{\cftsubsecfont}{\large}
 
 
 \begin{document}
@@ -52,7 +52,7 @@
 \setcounter{tocdepth}{3}
 \tableofcontents
 \newpage
-\Large
+\large
 	
 \section{Introduction générale}
 Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au cours d’algorithmique 2 pour une meilleure compréhension et maîtrise de ceux-ci.
@@ -136,6 +136,9 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\end{algorithmic}
 		\end{algorithm}
 
+Tout graphe à n sommets a au maximum 3n/3 cliques maximales, et le temps d'exécution le plus défavorable de l'algorithme de Bron-Kerbosch (avec une stratégie pivot qui minimise le nombre d'appels récursifs effectués à chaque étape) est $O(3n/3)$, correspondant à cette limite.
+
+
 		\begin{algorithm}[H]
 		\caption{is\_chordal}
 		\begin{algorithmic}[1]		
@@ -158,31 +161,27 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\end{algorithmic}
 		\end{algorithm}
 
-Au début, nous créons I , choisissons un sommet 
-arbitraire I : O(N) , enlevons ce sommet du I : O(1) ,
-créons II contenant ce sommet : O(1) .
-Ensuite, tant que I n'est pas vide : O(N) nous chercherons
-un sommet "Vertex" dans I qui a le plus de connexions aux sommets 
-dans II : O(S x V x W) après nous supprimons ce sommet du I en 
-l'ajoutant au II : O(1) puis créons un ensemble contenant 
-l'intersection entre II et III : O(min(W,len(III))) et le 
-sous-graphe induit à partir de cet ensemble : 
-O(N x min(W,len(III)) x min(V,len(III)) ) .
-Ce qui fait au final une complexité de
-        O(N * max( min(W,len(III)) , N x min(W,len(III)) x min(V,len(III)) ))
-    =   O(N ** 2 x min(W,len(III)) x min(V,len(III)) )\\
-    
+Au debut, nous créons I $O(N)$, choisissons un sommet 
+arbitraire I $O(N)$, enlevons ce sommet du I $O(1)$,
+créons II contenant ce sommet $O(1)$.
+Ensuite, tant que I n'est pas vide $O(N)$ nous chercherons
+un sommet "Vertex" dans I qui a plus de connexions aux sommets 
+dans II $O(S * N * W) = O(N^2)$ parce qu'on toujours la cardinalite 
+de l'ensemble {S+W} egale a N, après nous supprimons ce sommet du I en 
+l'ajoutant au II $O(1)$ puis créons un ensemble contiendra 
+l'intersection entre II et III $O(\min(W,len(III)))$ et le 
+sous-graphe induit a partir de cet ensemble $O(N*\min(W,len(III))*\min(V,len(III)))$.
+Ce qui fait en final une complexite de
+$O(N*\max(N^2,\min(W,len(III)),N*\min(W,len(III))*\min(N,len(III))))$
+= $O(N^2*\min(W,len(III))*\min(N,len(III)))$\\\\
 Statique :\\
 III : ensemble des sommets liés au sommet "Vertex"\\
-N : nombre de sommets du graphe \\
-V : nombre de sommets d'une liste dans le dictionnaire\\
-
+N : nombre du sommets du graphe\\\\
 Dynamique :\\
 I : ensemble des sommets du graphe "unnumbered"\\
 II: ensemble des sommets "numbered"\\
-S : nombre de sommets dans "unnumbered"\\
-W : nombre de sommets dans "numbered"\\
-		
+S : nombre du sommets dans "unnumbered"\\
+W : nombre du sommets dans "numbered"
 		
 		\begin{algorithm}[H]
 		\caption{Algorithm\_X}
