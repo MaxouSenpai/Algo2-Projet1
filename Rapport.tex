@@ -104,7 +104,7 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 	
 	\subsection{Choix d'implémentation}
 	Pour stocker l'hyper-graphe nous avons décidé d'utiliser une classe nommée "Hypergraph". Chaque objet de cette classe a un ensemble de ses sommets, un dictionnaire d'hyper-arêtes, une matrice d'incidence, un dictionnaire de sommets liés et un graphe primal.
-	Nous avons aussi décidé d'utiliser une classe "PrimalGraph" pour une meilleure visibilité de nos différents algorithmes. Chaque objet de cette classe a un ensemble de ses sommets, un dictionnaire de ses hyper-arêtes, le nombre de sommets qu'il a et une liste de ses arêtes.	
+	Nous avons aussi décidé d'utiliser une classe "PrimalGraph" pour une meilleure visibilité de nos différents algorithmes. Chaque objet de cette classe a un ensemble de ses sommets, un dictionnaire de sommets et des sommets qui se trouvent dans la meme hyper-arêtes  et une liste des arêtes entre les différents sommets.
 	
 	\subsection{Algorithmes}
 	
@@ -190,8 +190,7 @@ W : nombre de sommets dans "numbered"
 		\STATE Choisir la colonne C contenant un minimum de 1
 		\STATE L = L'ensemble des lignes tel que $Matrice_{l,c}$ = 1, $\forall l \in L$
 		\FOR{chaque ligne l de L}
-			\STATE columnslist = [] 
-			\STATE rowslist = []
+			\STATE Initialiser deux listes vides : columnslist et rowslist
 			\STATE Ajouter la ligne à la solution partielle
 			\FOR{chaque colonne j de la matrice}
 				\IF{$Matrice_{l,j} = 1$}
@@ -245,7 +244,7 @@ NP (complexity)
 	On crée d'abord l'ensemble de n sommets\footnote{15 étant une limite imposée}, n pouvant aller de 1 à 15, ensuite on détermine le nombre m d'hyper-arêtes\footnote{15 étant une limite arbitraire}, m pouvant aller de 0 à $\min(2^n-1,15)$. Après pour chaque hyper-arête on détermine quels sommets y sont liés, chaque sommet a 50\% de chance d'appartenir à cette hyper-arête. Une verification est faite pour ne pas avoir deux hyper-arêtes les mêmes.
 
 \section{Interface graphique}
-	Pour la première partie du projet, on affiche à l'écran tous les noeuds de l'arbre de départ. Les noeuds faisant partie du sous-arbre de poids maximum seront colorés en rouge et les autres seront colorés en gris.\\\ \\\ Pour la deuxième partie, on affiche à l'écran l'hypergraphe dual sous deux formes, son graphe primal et son graphe d'incidence, et on affiche si oui ou non c'est un hyper-arbre. (+ terminal)
+	Pour la première partie du projet, on affiche à l'écran tous les noeuds de l'arbre de départ. Les noeuds faisant partie du sous-arbre de poids maximum seront colorés en rouge et les autres seront colorés en gris.\\\ \\\ Pour la deuxième partie, on affiche à l'écran l'hypergraphe dual sous deux formes, son graphe primal et son graphe d'incidence, et on affiche si oui ou non c'est un hyper-arbre. En plus dans le terminal on affiche plusieurs informations sur l'hyper-graphe : ses sommets, ses hyper-arêtes, la matrice de son graphe primal, sa matrice d'incidence ainsi que la transposée de cette dernière, ensuite on affiche les cliques maximales et les couvertures exactes.
 
 \section{Librairies utilisées}
 
