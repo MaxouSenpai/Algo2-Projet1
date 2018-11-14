@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{hyperref}
 
 
 \floatname{algorithm}{Algorithme}
@@ -136,7 +137,7 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\end{algorithmic}
 		\end{algorithm}
 
-Tout graphe à n sommets a au maximum 3n/3 cliques maximales, et le temps d'exécution le plus défavorable de l'algorithme de Bron-Kerbosch (avec une stratégie pivot qui minimise le nombre d'appels récursifs effectués à chaque étape) est $O(3n/3)$, correspondant à cette limite.
+\cite{Algo1} Tout graphe à n sommets a au maximum $3^{n/3}$ cliques maximales, et le temps d'exécution le plus défavorable de l'algorithme de Bron-Kerbosch (avec une stratégie pivot qui minimise le nombre d'appels récursifs effectués à chaque étape) est $O(3^{n/3})$, correspondant à cette limite.
 
 
 		\begin{algorithm}[H]
@@ -161,7 +162,7 @@ Tout graphe à n sommets a au maximum 3n/3 cliques maximales, et le temps d'exé
 		\end{algorithmic}
 		\end{algorithm}
 
-Au debut, nous créons I $O(N)$, choisissons un sommet 
+\cite{Algo2} Au debut, nous créons I $O(N)$, choisissons un sommet 
 arbitraire I $O(N)$, enlevons ce sommet du I $O(1)$,
 créons II contenant ce sommet $O(1)$.
 Ensuite, tant que I n'est pas vide $O(N)$ nous chercherons
@@ -176,12 +177,12 @@ $O(N*\max(N^2,\min(W,len(III)),N*\min(W,len(III))*\min(N,len(III))))$
 = $O(N^2*\min(W,len(III))*\min(N,len(III)))$\\\\
 Statique :\\
 III : ensemble des sommets liés au sommet "Vertex"\\
-N : nombre du sommets du graphe\\\\
+N : nombre de sommets du graphe\\\\
 Dynamique :\\
 I : ensemble des sommets du graphe "unnumbered"\\
 II: ensemble des sommets "numbered"\\
-S : nombre du sommets dans "unnumbered"\\
-W : nombre du sommets dans "numbered"
+S : nombre de sommets dans "unnumbered"\\
+W : nombre de sommets dans "numbered"
 		
 		\begin{algorithm}[H]
 		\caption{Algorithm\_X}
@@ -219,6 +220,26 @@ W : nombre du sommets dans "numbered"
 	
 		\end{algorithmic}
 		\end{algorithm}
+		
+\cite{Algo3}
+
+\begin{thebibliography}{9}
+
+\bibitem{Algo1}
+Bron–Kerbosch algorithm
+\\\url{https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm}
+
+\bibitem{Algo2}
+networkx.algorithms.chordal
+\\\url{https://networkx.github.io/documentation/stable/_modules/networkx/algorithms/chordal.html}
+
+\bibitem{Algo3}
+Knuth's Algorithm X
+\\\url{https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X}
+NP (complexity)
+\\\url{https://en.wikipedia.org/wiki/NP_(complexity)}
+
+\end{thebibliography}
 		
 	
 	\subsection{Hypergraphes aléatoires}
