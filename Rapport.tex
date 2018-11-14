@@ -65,8 +65,7 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 
 	\subsection{Choix d'implémentation}
 
-		Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les nœuds à désactiver, pour qu'à l'affichage on puisse voir l'arbre de départ avec les nœuds activés (en rouge) ainsi que ceux désactivés (en gris).
-	
+		Pour stocker l'arbre nous avons décidé d'utiliser une classe nommée "Tree". Chaque nœud a un nom, un poids et une liste de ses enfants. Nous avons décidé de ne pas modifier l'arbre de départ mais de créer une liste qui contiendra le nom de tous les nœuds qui forme le sous-arbre de poids maximum.
 	
 		\subsection{Algorithme}
 		
@@ -102,8 +101,11 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 
 	
 	\subsection{Introduction}
+	Dans cette partie nous manipulons des hyper-graphes et des hyper-graphes duals. Les outils utiles pour travailler sur les hyper-graphes sont les graphes d’incidence et les graphes primals. On manipule plusieurs concepts comme les graphes acycliques, les hyper-arbres, les cliques maximales, la chordalité et la couverture exacte.
 	
 	\subsection{Choix d'implémentation}
+	Pour stocker l'hyper-graphe nous avons décidé d'utiliser une classe nommée "Hypergraph". Chaque objet de cette classe a un ensemble de ses sommets, un dictionnaire d'hyper-arêtes, une matrice d'incidence, un dictionnaire de sommets liés et un graphe primal.
+	Nous avons aussi décidé d'utiliser une classe "PrimalGraph" pour une meilleure visibilité de nos différents algorithmes. Chaque objet de cette classe a un ensemble de ses sommets, un dictionnaire de ses hyper-arêtes, le nombre de sommets qu'il a et une liste de ses arêtes.	
 	
 	\subsection{Algorithmes}
 	
@@ -162,25 +164,21 @@ Ce projet a pour but de mettre en pratique des concepts sur les graphes vus au c
 		\end{algorithmic}
 		\end{algorithm}
 
-\cite{Algo2} Au debut, nous créons I $O(N)$, choisissons un sommet 
-arbitraire I $O(N)$, enlevons ce sommet du I $O(1)$,
-créons II contenant ce sommet $O(1)$.
-Ensuite, tant que I n'est pas vide $O(N)$ nous chercherons
-un sommet "Vertex" dans I qui a plus de connexions aux sommets 
-dans II $O(S * N * W) = O(N^2)$ parce qu'on toujours la cardinalite 
-de l'ensemble {S+W} egale a N, après nous supprimons ce sommet du I en 
-l'ajoutant au II $O(1)$ puis créons un ensemble contiendra 
-l'intersection entre II et III $O(\min(W,len(III)))$ et le 
-sous-graphe induit a partir de cet ensemble $O(N*\min(W,len(III))*\min(V,len(III)))$.
+\cite{Algo2} Au début, nous créons l'ensemble des sommets du graphe, "unnumbered", $O(N)$, choisissons un sommet 
+arbitraire d'unnumbered $O(N)$, enlevons ce sommet d'unnumbered $O(1)$,
+créons l'ensemble des sommets, "numbered", contenant ce sommet $O(1)$.
+Ensuite, tant qu'unnumbered n'est pas vide $O(N)$ nous chercherons
+le sommet "Vertex" dans unnumbered qui a le plus de connexions aux sommets 
+de numbered $O(S * N * W) = O((N/2)^2*N) = O(N^3/4)$ parce que la cardinalité 
+de l'ensemble $\{S+W\}$ est toujours égale à N, après nous supprimons ce sommet d'unnumbered en 
+l'ajoutant à numbered $O(1)$ puis nous créons un ensemble qui contiendra 
+l'intersection entre numbered et A $O(\min(W,len(A)))$ et le 
+sous-graphe induit a partir de cet ensemble $O(N*\min(W,len(A))*\min(V,len(A)))$.
 Ce qui fait en final une complexite de
-$O(N*\max(N^2,\min(W,len(III)),N*\min(W,len(III))*\min(N,len(III))))$
-= $O(N^2*\min(W,len(III))*\min(N,len(III)))$\\\\
-Statique :\\
-III : ensemble des sommets liés au sommet "Vertex"\\
-N : nombre de sommets du graphe\\\\
-Dynamique :\\
-I : ensemble des sommets du graphe "unnumbered"\\
-II: ensemble des sommets "numbered"\\
+$O(N*\max(N^3/4,\min(W,len(A)),N*\min(W,len(A))*\min(N,len(A))))$\\\\
+\noindent
+A : ensemble des sommets liés au sommet "Vertex"\\
+N : nombre de sommets du graphe\\
 S : nombre de sommets dans "unnumbered"\\
 W : nombre de sommets dans "numbered"
 		
@@ -193,7 +191,7 @@ W : nombre de sommets dans "numbered"
 		\STATE Choisir la colonne C contenant un minimum de 1
 		\STATE L = L'ensemble des lignes tel que $Matrice_{l,c}$ = 1, $\forall l \in L$
 		\FOR{chaque ligne l de L}
-			\STATE columnslist = [] time. This bound is tight  time. This bound is tight as may be seen for instances consisting of many disjoint copies of the set system  time. This bound is tight as may be seen for instances consisting of many disjoint copies of the set system as may be seen for instances consisting of many disjoint copies of the set system 
+			\STATE columnslist = [] 
 			\STATE rowslist = []
 			\STATE Ajouter la ligne à la solution partielle
 			\FOR{chaque colonne j de la matrice}
@@ -222,6 +220,8 @@ W : nombre de sommets dans "numbered"
 		\end{algorithm}
 		
 \cite{Algo3}
+Au début on fait une copie de la matrice sur laquelle on va appliquer l'algorithme $O(M*N)$, après on cherche les colonnes avec un minimum de 1 $O(M*N)$ ensuite on trouve les lignes $Matrice_{L,C}$ = 1 $O(N)$. Après pour chaque ligne des lignes trouvées précédemment on trouve les lignes et les colonnes à supprimer $O(M*N)$. On les supprime de la matrice $O(M*N)$. Si la matrice réduite n'est pas vide et que la colonne avec un minimum de 1 n'est pas 0, on répète cet algorithme sur cette matrice réduite de façon récursive ce qui donne une complexité non déterministe. Ça veut dire que l'algorihtme peut présenter des comportements différents sur des passages différents d'une matrice à l'autre réduite. Sinon la matrice est vide, on trouve une couverture exacte parmi les autres.
+
 
 \begin{thebibliography}{9}
 
@@ -246,7 +246,7 @@ NP (complexity)
 	On crée d'abord l'ensemble de n sommets\footnote{15 étant une limite imposée}, n pouvant aller de 1 à 15, ensuite on détermine le nombre m d'hyper-arêtes\footnote{15 étant une limite arbitraire}, m pouvant aller de 0 à $\min(2^n-1,15)$.
 
 \section{Interface graphique}
-	Pour la première partie du projet, on affiche à l'écran tous les noeuds de l'arbre de départ. Les noeuds faisant partis du sous-arbre de poids maximum seront colorés en rouge et les autres seront colorés en gris.\\\ \\\ Pour la deuxième partie, on affiche à l'écran l'hypergraphe dual sous deux formes, son graphe primal et son graphe d'incidence, et on affiche si oui ou non c'est un hyper-arbre. (+ terminal)
+	Pour la première partie du projet, on affiche à l'écran tous les noeuds de l'arbre de départ. Les noeuds faisant partie du sous-arbre de poids maximum seront colorés en rouge et les autres seront colorés en gris.\\\ \\\ Pour la deuxième partie, on affiche à l'écran l'hypergraphe dual sous deux formes, son graphe primal et son graphe d'incidence, et on affiche si oui ou non c'est un hyper-arbre. (+ terminal)
 
 \section{Librairies utilisées}
 
