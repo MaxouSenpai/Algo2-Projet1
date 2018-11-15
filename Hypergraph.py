@@ -21,7 +21,7 @@ class Hypergraph :
         self.E = E
         self.incidenceMatrix = incidenceMatrix
         self.dicoV = self.getDicoV()
-        # Dictionnaire contenant les sommets comme clés et les sommets contenus dans la même hyper-arête
+        # Dictionnaire contenant les sommets comme clés et les sommets contenus dans la même hyper-arête comme valeur
         self.primalGraph = self.primalGraph_OfaHypergraph()
         # Le graphe primal de l'hypergraphe
 
@@ -41,6 +41,7 @@ class Hypergraph :
             for Vertex2 in self.dicoV[Vertex] :
                 if {Vertex,Vertex2} not in edgesList :
                     edgesList.append({Vertex,Vertex2})
+                    # Ajouter l'arête {Vertex,Vertex2} à la liste des arêtes "edgesList"
 
         return edgesList
 
